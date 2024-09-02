@@ -1,0 +1,275 @@
+# electronic Ligand Builder and Optimisation Workbench (eLBOW)
+#   - a module of PHENIX version 1.21-5207-
+#   - file written: Fri Aug 23 10:34:44 2024
+#
+#   Ligand name: 9-{2,5-anhydro-4-[(phosphonooxy)methyl]-alpha-L-lyxofuranosyl}-9H-purin-6-amine
+#   Random seed: 3628800
+#   SMILES string: Nc1ncnc2n(cnc12)[C@@H]3O[C@]4(CO[C@@H]3[C@@H]4O)CO[P](O)(O)=O
+#
+data_comp_list
+loop_
+_chem_comp.id
+_chem_comp.three_letter_code
+_chem_comp.name
+_chem_comp.group
+_chem_comp.number_atoms_all
+_chem_comp.number_atoms_nh
+_chem_comp.desc_level
+LCA        LCA '9-{2,5-anhydro-4-[(phosphonooxy)methyl]-alpha-L-lyxofuranosyl}-9H-purin-6-amine' RNA 36 24 .
+#
+data_comp_LCA
+#
+loop_
+_chem_comp_atom.comp_id
+_chem_comp_atom.atom_id
+_chem_comp_atom.type_symbol
+_chem_comp_atom.type_energy
+_chem_comp_atom.charge
+_chem_comp_atom.partial_charge
+_chem_comp_atom.x
+_chem_comp_atom.y
+_chem_comp_atom.z
+LCA         P      P   P      0    .       0.8322   -2.5086   -4.3788
+LCA         O1P    O   OP    -1    .       2.1208   -2.5040   -3.9727
+LCA        O5'     O   O2     0    .      -0.1360   -2.0419   -3.1405
+LCA        C5'     C   CH2    0    .      -0.2533   -0.5303   -2.8148
+LCA        C3'     C   CH1    0    .      -1.5958    0.9397   -1.2781
+LCA        C6'     C   CH2    0    .      -2.0128   -1.1302   -1.2367
+LCA         N9     N   NR5    0    .      -0.0699    1.4291    0.9616
+LCA         C8     C   CR15   0    .      -0.7933    2.1898    1.8282
+LCA         C4     C   CR56   0    .       0.9770    0.9507    1.6019
+LCA         N7     N   N      0    .      -0.1843    2.1722    2.9823
+LCA         C5     C   CR56   0    .       0.9376    1.3919    2.8559
+LCA         C6     C   CR6    0    .       1.7891    0.9005    3.7673
+LCA        C2'     C   CH1    0    .      -2.0159    0.4339    0.1468
+LCA         N6     N   NH2    0    .       2.3236    1.3462    5.0108
+LCA        C4'     C   CT     0    .      -0.8693   -0.3725   -1.5032
+LCA        C1'     C   CH1    0    .      -0.7180    0.1887    0.5193
+LCA         C2     C   CR16   0    .       2.7114   -0.4817    2.1113
+LCA         N1     N   N      0    .       2.6674   -0.0217    3.4192
+LCA        O4'     O   O2     0    .      -0.0840   -0.2610   -0.4291
+LCA         O2P    O   O      0    .       0.4085   -4.0387   -4.8582
+LCA         N3     N   N      0    .       1.8947   -0.0096    1.2406
+LCA        O3'     O   OH1    0    .      -1.5958    0.9397   -1.2781
+LCA         OXT    O   OP    -1    .       0.6709   -1.5727   -5.4972
+LCA        O2'     O   O2     0    .      -2.6225   -0.6602   -0.3015
+LCA        H5'1    H   HCH2   0    .      -0.9508    0.0312   -3.6676
+LCA        H5'2    H   HCH2   0    .       0.7735   -0.0702   -2.8096
+LCA        H3'     H   HCH1   0    .      -2.5150    1.0707   -1.9920
+LCA        H6'1    H   HCH2   0    .      -1.6688   -2.2896   -0.9727
+LCA        H6'2    H   HCH2   0    .      -2.6494   -1.1306   -2.0979
+LCA         H8     H   HCR5   0    .      -1.7878    2.5413    1.6607
+LCA        H2'1    H   HCH1   0    .      -2.6772    1.2347    0.8067
+LCA         H61    H   HNH2   0    .       1.8497    2.0593    5.5322
+LCA         H62    H   HNH2   0    .       3.0702    0.8713    5.4151
+LCA        H1'     H   HCH1   0    .      -0.7141   -0.5183    1.3070
+LCA         H2     H   HCR6   0    .       3.4287   -1.2233    1.8241
+LCA         HB     H   HOH1   0    .      -0.5413    0.6741   -0.7624
+#
+loop_
+_chem_comp_bond.comp_id
+_chem_comp_bond.atom_id_1
+_chem_comp_bond.atom_id_2
+_chem_comp_bond.type
+_chem_comp_bond.value_dist
+_chem_comp_bond.value_dist_esd
+LCA   P       O1P   deloc         1.351 0.020
+LCA   P      O5'    single        1.640 0.020
+LCA   P       O2P   deloc         1.658 0.020
+LCA   P       OXT   deloc         1.467 0.020
+LCA  O5'     C5'    single        1.551 0.020
+LCA  C5'     C4'    single        1.458 0.020
+LCA  C5'     H5'1   single        1.237 0.020
+LCA  C5'     H5'2   single        1.125 0.020
+LCA  C3'     C2'    single        1.569 0.020
+LCA  C3'     C4'    single        1.517 0.020
+LCA  C3'     O3'    single        0.000 0.020
+LCA  C3'     H3'    single        1.171 0.020
+LCA  C6'     C4'    single        1.397 0.020
+LCA  C6'     O2'    single        1.211 0.020
+LCA  C6'     H6'1   single        1.238 0.020
+LCA  C6'     H6'2   single        1.071 0.020
+LCA   N9      C8    aromatic      1.361 0.020
+LCA   N9      C4    aromatic      1.317 0.020
+LCA   N9     C1'    single        1.468 0.020
+LCA   C8      N7    aromatic      1.305 0.020
+LCA   C8      H8    single        1.068 0.020
+LCA   C4      C5    aromatic      1.330 0.020
+LCA   C4      N3    aromatic      1.377 0.020
+LCA   N7      C5    aromatic      1.372 0.020
+LCA   C5      C6    aromatic      1.341 0.020
+LCA   C6      N6    single        1.425 0.020
+LCA   C6      N1    aromatic      1.320 0.020
+LCA  C2'     C1'    single        1.372 0.020
+LCA  C2'     O2'    single        1.329 0.020
+LCA  C2'     H2'1   single        1.230 0.020
+LCA   N6      H61   single        1.003 0.020
+LCA   N6      H62   single        0.973 0.020
+LCA  C4'     O4'    single        1.335 0.020
+LCA  C1'     O4'    single        1.226 0.020
+LCA  C1'     H1'    single        1.058 0.020
+LCA   C2      N1    aromatic      1.387 0.020
+LCA   C2      N3    aromatic      1.284 0.020
+LCA   C2      H2    single        1.071 0.020
+LCA  O3'      HB    single        1.204 0.020
+#
+loop_
+_chem_comp_angle.comp_id
+_chem_comp_angle.atom_id_1
+_chem_comp_angle.atom_id_2
+_chem_comp_angle.atom_id_3
+_chem_comp_angle.value_angle
+_chem_comp_angle.value_angle_esd
+LCA   OXT     P       O2P         109.88 3.000
+LCA   OXT     P      O5'          109.22 3.000
+LCA   O2P     P      O5'          109.28 3.000
+LCA   OXT     P       O1P         109.38 3.000
+LCA   O2P     P       O1P         109.49 3.000
+LCA  O5'      P       O1P         109.58 3.000
+LCA  C5'     O5'      P           118.74 3.000
+LCA  H5'2    C5'     H5'1         109.41 3.000
+LCA  H5'2    C5'     C4'          109.71 3.000
+LCA  H5'1    C5'     C4'          109.45 3.000
+LCA  H5'2    C5'     O5'          109.30 3.000
+LCA  H5'1    C5'     O5'          109.90 3.000
+LCA  C4'     C5'     O5'          109.06 3.000
+LCA  H3'     C3'     O3'          113.35 3.000
+LCA  H3'     C3'     C4'          112.47 3.000
+LCA  O3'     C3'     C4'          114.00 3.000
+LCA  H3'     C3'     C2'          112.30 3.000
+LCA  O3'     C3'     C2'          113.43 3.000
+LCA  C4'     C3'     C2'           89.09 3.000
+LCA  H6'2    C6'     H6'1         109.65 3.000
+LCA  H6'2    C6'     O2'          108.77 3.000
+LCA  H6'1    C6'     O2'          109.79 3.000
+LCA  H6'2    C6'     C4'          109.47 3.000
+LCA  H6'1    C6'     C4'          108.73 3.000
+LCA  O2'     C6'     C4'          110.41 3.000
+LCA  C1'      N9      C4          100.98 3.000
+LCA  C1'      N9      C8          115.43 3.000
+LCA   C4      N9      C8          108.41 3.000
+LCA   H8      C8      N7          125.29 3.000
+LCA   H8      C8      N9          125.38 3.000
+LCA   N7      C8      N9          107.90 3.000
+LCA   N3      C4      C5          119.91 3.000
+LCA   N3      C4      N9          130.97 3.000
+LCA   C5      C4      N9          108.32 3.000
+LCA   C5      N7      C8          107.92 3.000
+LCA   C6      C5      N7          131.69 3.000
+LCA   C6      C5      C4          120.04 3.000
+LCA   N7      C5      C4          107.44 3.000
+LCA   N1      C6      N6          101.48 3.000
+LCA   N1      C6      C5          119.95 3.000
+LCA   N6      C6      C5          135.80 3.000
+LCA  H2'1    C2'     O2'          118.13 3.000
+LCA  H2'1    C2'     C1'          118.61 3.000
+LCA  O2'     C2'     C1'          112.09 3.000
+LCA  H2'1    C2'     C3'          114.91 3.000
+LCA  O2'     C2'     C3'           94.66 3.000
+LCA  C1'     C2'     C3'           92.92 3.000
+LCA   H62     N6      H61         119.60 3.000
+LCA   H62     N6      C6          119.86 3.000
+LCA   H61     N6      C6          119.94 3.000
+LCA  O4'     C4'     C6'          111.91 3.000
+LCA  O4'     C4'     C3'           95.17 3.000
+LCA  C6'     C4'     C3'           92.80 3.000
+LCA  O4'     C4'     C5'          118.97 3.000
+LCA  C6'     C4'     C5'          117.30 3.000
+LCA  C3'     C4'     C5'          115.44 3.000
+LCA  H1'     C1'     O4'          109.19 3.000
+LCA  H1'     C1'     C2'          108.96 3.000
+LCA  O4'     C1'     C2'          110.15 3.000
+LCA  H1'     C1'      N9          109.79 3.000
+LCA  O4'     C1'      N9          108.34 3.000
+LCA  C2'     C1'      N9          110.39 3.000
+LCA   H2      C2      N3          119.92 3.000
+LCA   H2      C2      N1          120.25 3.000
+LCA   N3      C2      N1          119.83 3.000
+LCA   C2      N1      C6          120.09 3.000
+LCA  C1'     O4'     C4'          110.41 3.000
+LCA   C2      N3      C4          120.18 3.000
+LCA   HB     O3'     C3'          111.10 3.000
+LCA  C2'     O2'     C6'          110.50 3.000
+#
+loop_
+_chem_comp_tor.comp_id
+_chem_comp_tor.id
+_chem_comp_tor.atom_id_1
+_chem_comp_tor.atom_id_2
+_chem_comp_tor.atom_id_3
+_chem_comp_tor.atom_id_4
+_chem_comp_tor.value_angle
+_chem_comp_tor.value_angle_esd
+_chem_comp_tor.period
+LCA CONST_01       C5      N7      C8      N9           -0.11   0.0 0
+LCA CONST_02       N7      C5      C4      N9            0.05   0.0 0
+LCA CONST_03       C6      C5      C4      N9          170.76   0.0 0
+LCA CONST_04       C2      N3      C4      N9         -168.39   0.0 0
+LCA CONST_05       C5      C4      N9      C8           -0.12   0.0 0
+LCA CONST_06       N3      C4      N9      C8          169.38   0.0 0
+LCA CONST_07       C4      C5      N7      C8            0.04   0.0 0
+LCA CONST_08       C6      C5      N7      C8         -169.18   0.0 0
+LCA CONST_09       N7      C8      N9      C4            0.14   0.0 0
+LCA CONST_10       N1      C6      C5      C4            0.02   0.0 0
+LCA CONST_11       N1      C2      N3      C4            0.00   0.0 0
+LCA CONST_12       N3      C4      C5      N7         -170.82   0.0 0
+LCA CONST_13       N1      C6      C5      N7          168.12   0.0 0
+LCA CONST_14       C2      N3      C4      C5            0.09   0.0 0
+LCA CONST_15       C2      N1      C6      C5            0.08   0.0 0
+LCA CONST_16       N3      C4      C5      C6           -0.10   0.0 0
+LCA CONST_17       N3      C2      N1      C6           -0.09   0.0 0
+LCA CONST_18      C1'      N9      C8      N7          112.52   0.0 0
+LCA CONST_19      C1'      N9      C4      C5         -121.83   0.0 0
+LCA CONST_20       N3      C4      N9     C1'           47.67   0.0 0
+LCA CONST_21       N6      C6      C5      C4          157.25   0.0 0
+LCA CONST_22       N6      C6      C5      N7          -34.65   0.0 0
+LCA CONST_23       C2      N1      C6      N6         -163.93   0.0 0
+LCA CONST_24       H8      C8      N9      C4         -166.75   0.0 0
+LCA CONST_25       H2      C2      N3      C4         -179.53   0.0 0
+LCA CONST_26       H61     N6      C6      C5           20.71   0.0 0
+LCA CONST_27       H62     N6      C6      C5         -168.28   0.0 0
+LCA Var_01         N9     C1'     C2'     C3'           81.73  30.0 1
+LCA Var_02        O2'     C6'     C4'     C3'          -40.82  30.0 1
+LCA Var_03        C2'     C3'     C4'     C6'           55.46  30.0 3
+LCA Var_04        C1'     C2'     O2'     C6'          -57.41  30.0 1
+LCA Var_05        C2'     C1'      N9      C8           46.82  30.0 2
+LCA Var_06        C4'     C6'     O2'     C2'            1.12  30.0 1
+LCA Var_07        C3'     C4'     C5'     O5'         -154.52  30.0 3
+LCA Var_08        C4'     C5'     O5'      P          -165.65  30.0 3
+LCA Var_09         O2P     P      O5'     C5'         -160.87  30.0 2
+#
+loop_
+_chem_comp_chir.comp_id
+_chem_comp_chir.id
+_chem_comp_chir.atom_id_centre
+_chem_comp_chir.atom_id_1
+_chem_comp_chir.atom_id_2
+_chem_comp_chir.atom_id_3
+_chem_comp_chir.volume_sign
+LCA chir_01  C3'     C2'     C4'     O3'    positiv
+LCA chir_02  C2'     O2'     C3'     C1'    positiv
+LCA chir_03  C4'     O4'     C3'     C6'    positiv
+LCA chir_04  C1'     O4'      N9     C2'    negativ
+#
+loop_
+_chem_comp_plane_atom.comp_id
+_chem_comp_plane_atom.plane_id
+_chem_comp_plane_atom.atom_id
+_chem_comp_plane_atom.dist_esd
+LCA plan-1     N9 0.020
+LCA plan-1     C8 0.020
+LCA plan-1     C4 0.020
+LCA plan-1     N7 0.020
+LCA plan-1     C5 0.020
+LCA plan-1     C6 0.020
+LCA plan-1     N6 0.020
+LCA plan-1    C1' 0.020
+LCA plan-1     C2 0.020
+LCA plan-1     N1 0.020
+LCA plan-1     N3 0.020
+LCA plan-1     H8 0.020
+LCA plan-1     H2 0.020
+LCA plan-2     C6 0.020
+LCA plan-2     N6 0.020
+LCA plan-2    H61 0.020
+LCA plan-2    H62 0.020
