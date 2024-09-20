@@ -2,26 +2,44 @@ import re
 from io import TextIOWrapper
 from shutil import copy
 
-def atom_selction_text(out:TextIOWrapper,key1, key2, key3, key4, dist,sigma, slack, change = None ,chain1 = None, chain2 = None): # code for formating the .eff file
-                    chain1_txt = ""
-                    chain2_txt = ""
-                    if chain1:
-                         chain1_txt = f"chain {chain1} and"
-                    if chain2:
-                         chain2_txt = f"chain {chain2} and"
-                         
-                    out.write("    bond {\n")
-                    if change: out.write("      action = change\n")
-                    out.write(f"      atom_selection_1 = {chain1_txt} resid {key1} and name {key2}\n")
-                    out.write(f"      atom_selection_2 = {chain2_txt} resid {key3} and name {key4}\n")
-                    out.write(f"      distance_ideal = {dist}\n      sigma = {sigma}\n      slack = {slack}\n")
-                    out.write("    }\n")
+def atom_selction_text(out:TextIOWrapper,key1, key2, key3, key4, dist,sigma, slack=0, change = None ,chain1 = None, chain2 = None): # code for formating the .eff file
+    chain1_txt = ""
+    chain2_txt = ""
+    if chain1:
+         chain1_txt = f"chain {chain1} and"
+    if chain2:
+         chain2_txt = f"chain {chain2} and"
+         
+    out.write("    bond {\n")
+    if change: out.write("      action = change\n")
+    out.write(f"      atom_selection_1 = {chain1_txt} resid {key1} and name {key2}\n")
+    out.write(f"      atom_selection_2 = {chain2_txt} resid {key3} and name {key4}\n")
+    out.write(f"      distance_ideal = {dist}\n      sigma = {sigma}\n")
+    out.write("    }\n")
+                    
+def parallelity(out:TextIOWrapper,resid1,resid2, angel,sigma,chain1 = None, chain2 = None):
+    chain1_txt = ""
+    chain2_txt = ""
+    if chain1:
+         chain1_txt = f"chain {chain1} and "
+    if chain2:
+         chain2_txt = f"chain {chain2} and "
+                             
+    out.write("    parallelity {\n")
+    out.write(f"      atom_selection_1 = {chain1_txt}resid {resid1} and (name C5 or name C6 or name N1 or name C2 or name N3 or name C4)\n")
+    out.write(f"      atom_selection_2 = {chain2_txt}resid {resid2} and (name C5 or name C6 or name N1 or name C2 or name N3 or name C4)\n")
+    out.write(f"      sigma = {sigma}\n      target_angle_deg = {angel}\n")
+    out.write("    }\n")
 
 def restrint_from_pb(file,dir_path="",minimum = False): #restrints based on chimira .pb file
 
     with open(file) as f, open(f"{dir_path}/{file[:-4]}_pb.eff","w") as out:
         restrints = []
         chains = {}
+        plan = {}
+        pairs = []
+        blocked = ["HO2'","O4'","HO'2","O2'","HO3'","H'O3","O5'","OP1","OP2","O3'","N7"]
+        Pu_or_py = {"N6":"R","N1":"R","N2":"R","O6":"R","O2":"Y","N3":"Y","N4":"Y","O4":"Y"}
         # read .pb and split it into the set of donor/accepter
         for line in f:
             
@@ -40,6 +58,10 @@ def restrint_from_pb(file,dir_path="",minimum = False): #restrints based on chim
                 rest.extend(rest2)
                 restrints.append(rest)
             
+            if rest[2] not in blocked and rest2[2] not in blocked:
+                mini = min(int(rest[1]),int(rest2[1]))
+                maxi = max(int(rest[1]),int(rest2[1]))
+                pairs.append((mini,maxi))
             #defines length of chains
             if rest[0] in chains:
                 chains[rest[0]] = max(chains[rest[0]],int(rest[1]))
@@ -49,10 +71,9 @@ def restrint_from_pb(file,dir_path="",minimum = False): #restrints based on chim
                 chains[rest[3]] = max(chains[rest[3]],int(rest[4]))
             else:
                 chains[rest[3]] = int(rest[4])
-        
+
         # write out file
         out.write("geometry_restraints {\n  edits {\n")
-        blocked = ["HO2'","O4'","HO'2","O2'","HO3'","H'O3"]
         for res in restrints:
             # remove backbone interactions
             if res[2] in blocked or res[5] in blocked:
@@ -63,17 +84,18 @@ def restrint_from_pb(file,dir_path="",minimum = False): #restrints based on chim
         for chain in chains.keys():
             for i in range(1,chains[chain]):
                     atom_selction_text(out,i,"O3'",i+1,"P",1.6,0.01,0.01,True,chain1=chain,chain2=chain) # fixes backbone from breakting
-                
+        for pair in pairs:
+            parallelity(out,pair[0],pair[1],0,0.0335)
         out.write("  }\n}")
     if dir_path and not minimum:copy(file,dir_path)
 
 
 def restrint_from_ss(ssfile,dir_path ="",minimum = False): #restrints based on ROAD dot backet file target.txt from trace patteren
     #dict of basepair interactions
-    basepairs = {"A":{"U":(("H61","O4"),("N1","H3"))},
-                 "C":{"G":(("H41","O6"),("N3","H1"),("O2","H21"))},
-                 "G":{"C":(("O6","H41"),("H1","N3"),("H21","O2")),"U":(("O6","H3"),("H1","O2"))},
-                 "U":{"A":(("O4","H61"),("H3","N1")),"G":(("H3","O6"),("O2","H1"))}
+    basepairs = {"A":{"U":(("N6","O4"),("N1","N3"))},
+                 "C":{"G":(("N4","O6"),("N3","N1"),("O2","N2"))},
+                 "G":{"C":(("O6","N4"),("N1","N3"),("N2","O2")),"U":(("O6","N3"),("N1","O2"))},
+     "U":{"A":(("O4","N6"),("N3","N1")),"G":(("N3","O6"),("O2","N1"))}
                  }
     #dict of with H donors are connected to what Hs
     hydrogen_fix = {"A":[("H61","N6")],
@@ -123,18 +145,19 @@ def restrint_from_ss(ssfile,dir_path ="",minimum = False): #restrints based on R
         for pair in pairs:
             base1 = seq[pair[0]]
             base2 = seq[pair[1]]
+            parallelity(out,pair[0]+1,pair[1]+1,0,0.027)
           
             for interaction in basepairs[base1][base2]: #write out each hbond
-                atom_selction_text(out,pair[0]+1,interaction[0],pair[1]+1,interaction[1],3.4,0.075,0.075)
-            
-            for fix in hydrogen_fix[base1]: # fix h breaks for base 1
-                atom_selction_text(out,pair[0]+1,fix[0],pair[0]+1,fix[1],1,0.01,0.01)
+                atom_selction_text(out,pair[0]+1,interaction[0],pair[1]+1,interaction[1],3.4,0.05)
+            #
+            #for fix in hydrogen_fix[base1]: # fix h breaks for base 1
+            #    atom_selction_text(out,pair[0]+1,fix[0],pair[0]+1,fix[1],1,0.01,0.01)
 
-            for fix in hydrogen_fix[base2]: # fix h breaks for base 2
-                atom_selction_text(out,pair[1]+1,fix[0],pair[1]+1,fix[1],1,0.01,0.01)
+            #for fix in hydrogen_fix[base2]: # fix h breaks for base 2
+            #    atom_selction_text(out,pair[1]+1,fix[0],pair[1]+1,fix[1],1,0.01,0.01)
         
         for i in range(1,len(seq)-1): # fix backbone breaks
-            atom_selction_text(out,i,"O3'",i+1,"P",1.6,0.01,0.01,True)
+            atom_selction_text(out,i,"O3'",i+1,"P",1.6,0.03,change=True)
         
         out.write("  }\n}")
     if dir_path and not minimum:copy(ssfile,dir_path)
