@@ -17,7 +17,12 @@ def atom_selction_text(out:TextIOWrapper,key1, key2, key3, key4, dist,sigma, sla
     out.write(f"      distance_ideal = {dist}\n      sigma = {sigma}\n")
     out.write("    }\n")
                     
-def parallelity(out:TextIOWrapper,resid1,resid2, angel,sigma,chain1 = None, chain2 = None):
+def parallelity(out:TextIOWrapper,base1,resid1,base2,resid2, angel,sigma,chain1 = None, chain2 = None):
+    base_string = {"A":"name C5 or name C6 or name N1 or name C2 or name N3 or name C4",
+                   "G":"name C5 or name C6 or name N1 or name C2 or name N3 or name C4",
+                   "C":"name N1 or name C2 or name N3 or name C4 or name C5 or name C6",
+                   "U":"name N1 or name C2 or name N3 or name C4 or name C5 or name C6",
+                   "R":"name C5 or name C6 or name N1 or name C2 or name N3 or name C4"}
     chain1_txt = ""
     chain2_txt = ""
     if chain1:
@@ -85,7 +90,7 @@ def restrint_from_pb(file,dir_path="",minimum = False): #restrints based on chim
             for i in range(1,chains[chain]):
                     atom_selction_text(out,i,"O3'",i+1,"P",1.6,0.01,0.01,True,chain1=chain,chain2=chain) # fixes backbone from breakting
         for pair in pairs:
-            parallelity(out,pair[0],pair[1],0,0.0335)
+            parallelity(out,"N",pair[0],"N",pair[1],0,0.0335)
         out.write("  }\n}")
     if dir_path and not minimum:copy(file,dir_path)
 
@@ -95,7 +100,7 @@ def restrint_from_ss(ssfile,dir_path ="",minimum = False): #restrints based on R
     basepairs = {"A":{"U":(("N6","O4"),("N1","N3"))},
                  "C":{"G":(("N4","O6"),("N3","N1"),("O2","N2"))},
                  "G":{"C":(("O6","N4"),("N1","N3"),("N2","O2")),"U":(("O6","N3"),("N1","O2"))},
-     "U":{"A":(("O4","N6"),("N3","N1")),"G":(("N3","O6"),("O2","N1"))}
+                 "U":{"A":(("O4","N6"),("N3","N1")),"G":(("N3","O6"),("O2","N1"))}
                  }
     #dict of with H donors are connected to what Hs
     hydrogen_fix = {"A":[("H61","N6")],
@@ -145,7 +150,7 @@ def restrint_from_ss(ssfile,dir_path ="",minimum = False): #restrints based on R
         for pair in pairs:
             base1 = seq[pair[0]]
             base2 = seq[pair[1]]
-            parallelity(out,pair[0]+1,pair[1]+1,0,0.027)
+            parallelity(out,base1,pair[0]+1,base2,pair[1]+1,0,0.027)
           
             for interaction in basepairs[base1][base2]: #write out each hbond
                 atom_selction_text(out,pair[0]+1,interaction[0],pair[1]+1,interaction[1],3.4,0.05)
