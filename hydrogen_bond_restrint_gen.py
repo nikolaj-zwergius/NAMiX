@@ -95,7 +95,7 @@ def restrint_from_pb(file,dir_path="",minimum = False): #restrints based on chim
     if dir_path and not minimum:copy(file,dir_path)
 
 
-def restrint_from_ss(ssfile,dir_path ="",minimum = False): #restrints based on ROAD dot backet file target.txt from trace patteren
+def restrint_from_road(ssfile,dir_path ="",minimum = False): #restrints based on ROAD dot backet file target.txt from trace patteren
     #dict of basepair interactions
     basepairs = {"A":{"U":(("N6","O4"),("N1","N3"))},
                  "C":{"G":(("N4","O6"),("N3","N1"),("O2","N2"))},

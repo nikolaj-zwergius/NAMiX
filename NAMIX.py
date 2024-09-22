@@ -7,7 +7,7 @@ parent_dir_path = os.path.abspath(os.path.join(dir_path, os.pardir))
 
 from def_class import modnuc, Wrong_Base_Error
 from define_mods import *
-from hydrogen_bond_restrint_gen import restrint_from_ss, restrint_from_pb
+from hydrogen_bond_restrint_gen import restrint_from_road, restrint_from_pb
 
 from shutil import copy
 
@@ -69,7 +69,7 @@ def NAMIX(pdbfile:str,restrin_file:str=None,A:modnuc=A_no_mod, C:modnuc=C_no_mod
         if restrin_file.endswith(".pb"):
             restrint_from_pb(restrin_file,dir_path,min)
         else:
-            restrint_from_ss(restrin_file,dir_path,min)
+            restrint_from_road(restrin_file,dir_path,min)
     if not min:
         for i in range(5):#copy .cif into folder for XNA
             _copy_cif(bases[i],dir_path)
