@@ -2,30 +2,47 @@ from NAMIX import NAMIX,rev_namix
 import getopt,sys,os
 from define_mods import *
 import subprocess
-
+from namix_driver import phenix,qrnas
+from namix_configer import configer
 inputs = [None,None,A_no_mod, C_no_mod, G_no_mod, T_no_mod, U_no_mod, "",False,False]
-if __name__ == "__main__":
-    try:
-        opts,args =getopt.getopt(sys.argv[1:], "f:oa:c:u:g:t:r:p:hb:v", ["help""file=","overwrite","amod=","cmod=","umod=","tmod=","restrin=","prefix=","blueprint","min"])
 
-    except getopt.GetoptError:
-            print("""
+help_mes =  """
                   
-                  Input file can be give as the last argument of the call or as -f or --file
+                  Input file can be give as the last argument of the call or as -f [filename] or --file [filename]
                   
                   -o or --overwrite: for overwrite folder content with same name
-                  -r or --restrin: .txt with dot bracket format or .pb from chimira to gennerete basepair restrains for use in phenix generets .eff file
-                  -p or --prefix: for give file prefixes and folder suffix
-                  -b or --blueprint: make file for restrin based on ROAD blueprint
-
-
-                  -a or --amod: set modifcation for adenine
-                  -c or --cmod: set modifcation for cytosine
-                  -g or --gmod: set modifcation for guanine
-                  -u or --umod: set modifcation for uracil
-                  -t or --tmod: set modifcation for thymine
+                  -r [file] or --restrin: .txt with dot bracket format or .pb from chimira to gennerete basepair restrains for use in phenix generets .eff file
+                  -p [prefix] or --prefix: for give file prefixes and folder suffix
+                  -b [file] or --blueprint: make file for restrin based on ROAD blueprint 
+                  -v: return mod nuc stucture to RNA
                   
-                   """)
+                  -q or --QRNA [config]  runs QRNAS if possiable if -q used default config will be used 
+                  -x [map,res] or --phenix [map,res] runs Phenix.real_space_refine if possiable
+                
+                  Mods are in the format "-[base to replace see below] [modifcation_3_lettercode],resid,resid...."
+                  if no resid given all bases of the type will be replaced 
+                  
+                  
+                  -a [modifcaiton,resids] or --amod [modifcaiton,resids]: set modifcation for adenine
+                  -c [modifcaiton,resids] or --cmod [modifcaiton,resids]: set modifcation for cytosine
+                  -g [modifcaiton,resids] or --gmod [modifcaiton,resids]: set modifcation for guanine
+                  -u [modifcaiton,resids] or --umod [modifcaiton,resids]: set modifcation for uracil
+                  -t [modifcaiton,resids] or --tmod [modifcaiton,resids]: set modifcation for thymine
+
+
+                  --min: Make NAMiX output only the modded pdb file and restrint if given
+                  --config [filename]: runs config file 
+                  
+                   """
+
+
+
+if __name__ == "__main__":
+    try:
+        opts,args =getopt.getopt(sys.argv[1:], "f:oa:c:u:g:t:r:p:hb:v:x:q", ["help""file=","overwrite","amod=","cmod=","umod=","tmod=","restrin=","prefix=","blueprint=","min","phenix=","qrna=","config"])
+
+    except getopt.GetoptError:
+            print(help_mes)
             sys.exit()
 
     try:
@@ -44,30 +61,7 @@ if __name__ == "__main__":
 
     for i in opts:
         if i[0] == "-h" or "--help" == i[0]:
-            print("""
-                  
-                  Input file can be give as the last argument of the call or as -f or --file
-                  
-                  -o or --overwrite: for overwrite folder content with same name
-                  -r or --restrin: .txt with dot bracket format or .pb from chimira to gennerete basepair restrains for use in phenix generets .eff file
-                  -p or --prefix: for give file prefixes and folder suffix
-                  -b or --blueprint: make file for restrin based on ROAD blueprint 
-                  -v: return mod nuc stucture to RNA
-
-                
-                  Mods are in the format "-[base to replace see below] [modifcation_3_lettercode],resid,resid...."
-                  if no resid given all bases of the type will be replaced 
-                  
-                  -a or --amod: set modifcation for adenine
-                  -c or --cmod: set modifcation for cytosine
-                  -g or --gmod: set modifcation for guanine
-                  -u or --umod: set modifcation for uracil
-                  -t or --tmod: set modifcation for thymine
-
-
-                  --min: Make NAMiX output only the modded pdb file and restrint if given
-                  
-                   """)
+            print(help_mes)
             
             print("\t\t  3 letter code for modificationsn\n")
             for key in mod_dict:
@@ -131,8 +125,17 @@ if __name__ == "__main__":
         
         if i[0] == "--min":
             inputs[9] = True
-
         
+        if i[0] == "--phenix" or i[0] == "-x":
+            maps,res = i[1].split(",")
+            phenix(maps,res)
+        if i[0] == "--qrna":
+            qrnas(i[1])
+        if i[0] == "-q":
+            qrnas()
+        if i[0] == "--config":
+            configer()
+
         if i[0] == "-v":
             rev_namix(inputs[0])
             sys.exit()
