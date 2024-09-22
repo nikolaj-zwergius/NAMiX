@@ -5,7 +5,7 @@ import subprocess
 from namix_driver import phenix,qrnas
 from namix_configer import configer
 inputs = [None,None,A_no_mod, C_no_mod, G_no_mod, T_no_mod, U_no_mod, "",False,False]
-
+driver_tags = {}
 help_mes =  """
                   
                   Input file can be give as the last argument of the call or as -f [filename] or --file [filename]
@@ -16,7 +16,7 @@ help_mes =  """
                   -b [file] or --blueprint: make file for restrin based on ROAD blueprint 
                   -v: return mod nuc stucture to RNA
                   
-                  -q or --QRNA [config]  runs QRNAS if possiable if -q used default config will be used 
+                  -q or --qrna [config]  runs QRNAS if possiable if -q used default config will be used 
                   -x [map,res] or --phenix [map,res] runs Phenix.real_space_refine if possiable
                 
                   Mods are in the format "-[base to replace see below] [modifcation_3_lettercode],resid,resid...."
@@ -30,7 +30,7 @@ help_mes =  """
                   -t [modifcaiton,resids] or --tmod [modifcaiton,resids]: set modifcation for thymine
 
 
-                  --min: Make NAMiX output only the modded pdb file and restrint if given
+                  -m or --min: Make NAMiX output only the modded pdb file and restrint if given
                   --config [filename]: runs config file 
                   
                    """
@@ -39,7 +39,7 @@ help_mes =  """
 
 if __name__ == "__main__":
     try:
-        opts,args =getopt.getopt(sys.argv[1:], "f:oa:c:u:g:t:r:p:hb:v:x:q", ["help""file=","overwrite","amod=","cmod=","umod=","tmod=","restrin=","prefix=","blueprint=","min","phenix=","qrna=","config"])
+        opts,args =getopt.getopt(sys.argv[1:], "f:a:c:u:g:t:r:p:b:v:x:q:hom", ["help""file=","overwrite","amod=","cmod=","umod=","tmod=","restrin=","prefix=","blueprint=","min","phenix=","qrna","config"])
 
     except getopt.GetoptError:
             print(help_mes)
@@ -82,14 +82,17 @@ if __name__ == "__main__":
             file = i[1].strip(".\\")
             inputs[1] = file
         if i[0] =="-b" or i[0] == "--blueprint":
-            pipe = subprocess.run(["perl", f"{os.path.dirname(__file__)}/trace_pattern.pl", f"{os.getcwd()}/{i[1]}"],capture_output=True)
-            with open(f"bp_restrint{inputs[0]}.txt","w") as out:
-                file = str(pipe.stdout).split("\\n")
-                print(file)
-                out.write(file[0][2:]+"\n")
-                out.write(file[1]+"\n")
-                out.write(file[2]+"\n")
-            inputs[1] = f"bp_restrint{inputs[0]}.txt"
+            try:
+                pipe = subprocess.run(["perl", f"{os.path.dirname(__file__)}/trace_pattern.pl", f"{os.getcwd()}/{i[1]}"],capture_output=True)
+                with open(f"bp_restrint{inputs[0]}.txt","w") as out:
+                    file = str(pipe.stdout).split("\\n")
+                    print(file)
+                    out.write(file[0][2:]+"\n")
+                    out.write(file[1]+"\n")
+                    out.write(file[2]+"\n")
+                inputs[1] = f"bp_restrint{inputs[0]}.txt"
+            except:
+                print("\n\n could not run: perl properly not installed")
         
         
         if i[0] == "-u" or i[0] == "--umod":
@@ -123,18 +126,19 @@ if __name__ == "__main__":
                 mod.mods.append(int(split_list[base]))
             inputs[2] = mod
         
-        if i[0] == "--min":
+        if i[0] == "--min" or i[0] == "-m":
             inputs[9] = True
         
         if i[0] == "--phenix" or i[0] == "-x":
             maps,res = i[1].split(",")
-            phenix(maps,res)
-        if i[0] == "--qrna":
-            qrnas(i[1])
+            driver_tags["phenix"] = (maps,res)
         if i[0] == "-q":
-            qrnas()
+            driver_tags["qrna"] = i[1]
+        if i[0] == "--qrna":
+            driver_tags["qrna"] = "defualt_qRNA_config"
         if i[0] == "--config":
-            configer()
+            configer(i[1])
+            sys.exit()
 
         if i[0] == "-v":
             rev_namix(inputs[0])
@@ -142,4 +146,13 @@ if __name__ == "__main__":
         
 
     NAMIX(*inputs)
-    print(f"assembled folder for {inputs[0]}")
+    print(f"convereted {inputs[0]}")
+    
+    if "qrna" in driver_tags:
+        print("qrna done")
+        qrnas(driver_tags["qrna"])
+    if "phenix" in driver_tags:
+        print("phenix done")
+        phenix(driver_tags["phenix"][0],driver_tags["phenix"][0])
+        
+    
