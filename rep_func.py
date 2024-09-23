@@ -105,9 +105,8 @@ def addtion_atom_generation(res:dict,mod:modnuc,atom_nr:int,out:TextIOWrapper): 
 
         point_coord = add[3]+R.dot(add[5])+translat
         items = [mod.type,atom_nr,"".join(add[2]),mod.name,res["".join(add[0])][21:26],point_coord[0],point_coord[1],point_coord[2],res["".join(add[0])][56:66],add[2][0]]
-
-        out.write(f"{items[0]:<6}{atom_nr:>5}  {"".join(add[2]):^4}{items[3]:>3} {items[4]}     {items[5]:>7.6g} {items[6]:>7.6g} {items[7]:>7.6g}  {items[8]}           {items[9]}\n")
-
+        spot3 = "".join(add[2])
+        out.write(f"{items[0]:<6}{atom_nr:>5}  {spot3:^4}{items[3]:>3} {items[4]}     {items[5]:>7.6g} {items[6]:>7.6g} {items[7]:>7.6g}  {items[8]}           {items[9]}\n")
         atom_nr += 1
 
 
