@@ -83,14 +83,19 @@ if __name__ == "__main__":
             inputs[1] = file
         if i[0] =="-b" or i[0] == "--blueprint":
             try:
-                pipe = subprocess.run(["perl", f"{os.path.dirname(__file__)}/trace_pattern.pl", f"{os.getcwd()}/{i[1]}"],capture_output=True)
+                split_list_bp = i[1].split(",")
+                try:
+                    id  = split_list_bp[1]
+                except:
+                    id = 1
+                pipe = subprocess.run(["perl", f"{os.path.dirname(__file__)}/trace_pattern.pl", f"{os.getcwd()}/{split_list_bp[0]}"],capture_output=True)
                 with open(f"bp_restrint{inputs[0]}.txt","w") as out:
                     file = str(pipe.stdout).split("\\n")
                     print(file)
                     out.write(file[0][2:]+"\n")
                     out.write(file[1]+"\n")
                     out.write(file[2]+"\n")
-                inputs[1] = f"bp_restrint{inputs[0]}.txt"
+                inputs[1] = (f"bp_restrint{inputs[0]}.txt",id)
             except:
                 print("\n\n could not run: perl properly not installed")
         

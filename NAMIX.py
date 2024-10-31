@@ -66,10 +66,10 @@ def NAMIX(pdbfile:str,restrin_file:str=None,A:modnuc=A_no_mod, C:modnuc=C_no_mod
         raise
 
     if restrin_file:
-        if restrin_file.endswith(".pb"):
-            restrint_from_pb(restrin_file,dir_path,min)
+        if restrin_file[0].endswith(".pb"):
+            restrint_from_pb(restrin_file[0],dir_path,min)
         else:
-            restrint_from_road(restrin_file,dir_path,min)
+            restrint_from_road(restrin_file[0],restrin_file[1],dir_path,min)
     if not min:
         for i in range(5):#copy .cif into folder for XNA
             _copy_cif(bases[i],dir_path)

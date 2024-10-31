@@ -95,8 +95,9 @@ def restrint_from_pb(file,dir_path="",minimum = False): #restrints based on chim
     if dir_path and not minimum:copy(file,dir_path)
 
 
-def restrint_from_road(ssfile,dir_path ="",minimum = False): #restrints based on ROAD dot backet file target.txt from trace patteren
+def restrint_from_road(ssfile,pos=1,dir_path ="",minimum = False): #restrints based on ROAD dot backet file target.txt from trace patteren
     #dict of basepair interactions
+    pos = int(pos)
     basepairs = {"A":{"U":(("N6","O4"),("N1","N3"))},
                  "C":{"G":(("N4","O6"),("N3","N1"),("O2","N2"))},
                  "G":{"C":(("O6","N4"),("N1","N3"),("N2","O2")),"U":(("O6","N3"),("N1","O2"))},
@@ -125,7 +126,7 @@ def restrint_from_road(ssfile,dir_path ="",minimum = False): #restrints based on
         seq  =lines[2]
 
         # read Dot backet notation
-        index = 0
+        index = pos
         for char in dot_bac:
             if char == "(":
                 backet1.append(index)
@@ -148,8 +149,8 @@ def restrint_from_road(ssfile,dir_path ="",minimum = False): #restrints based on
         # writiing the file
         out.write("geometry_restraints {\n  edits {\n")
         for pair in pairs:
-            base1 = seq[pair[0]]
-            base2 = seq[pair[1]]
+            base1 = seq[pair[0]-pos]
+            base2 = seq[pair[1]-pos]
             parallelity(out,base1,pair[0]+1,base2,pair[1]+1,0,0.027)
           
             for interaction in basepairs[base1][base2]: #write out each hbond
@@ -161,7 +162,7 @@ def restrint_from_road(ssfile,dir_path ="",minimum = False): #restrints based on
             #for fix in hydrogen_fix[base2]: # fix h breaks for base 2
             #    atom_selction_text(out,pair[1]+1,fix[0],pair[1]+1,fix[1],1,0.01,0.01)
         
-        for i in range(1,len(seq)-1): # fix backbone breaks
+        for i in range(pos,pos+len(seq)-1): # fix backbone breaks
             atom_selction_text(out,i,"O3'",i+1,"P",1.6,0.03,change=True)
         
         out.write("  }\n}")
