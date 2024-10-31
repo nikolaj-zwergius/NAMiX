@@ -151,10 +151,10 @@ def restrint_from_road(ssfile,pos=1,dir_path ="",minimum = False): #restrints ba
         for pair in pairs:
             base1 = seq[pair[0]-pos]
             base2 = seq[pair[1]-pos]
-            parallelity(out,base1,pair[0]+1,base2,pair[1]+1,0,0.027)
+            parallelity(out,base1,pair[0],base2,pair[1],0,0.027)
           
             for interaction in basepairs[base1][base2]: #write out each hbond
-                atom_selction_text(out,pair[0]+1,interaction[0],pair[1]+1,interaction[1],3.4,0.05)
+                atom_selction_text(out,pair[0],interaction[0],pair[1],interaction[1],3.4,0.05)
             #
             #for fix in hydrogen_fix[base1]: # fix h breaks for base 1
             #    atom_selction_text(out,pair[0]+1,fix[0],pair[0]+1,fix[1],1,0.01,0.01)
@@ -162,7 +162,7 @@ def restrint_from_road(ssfile,pos=1,dir_path ="",minimum = False): #restrints ba
             #for fix in hydrogen_fix[base2]: # fix h breaks for base 2
             #    atom_selction_text(out,pair[1]+1,fix[0],pair[1]+1,fix[1],1,0.01,0.01)
         
-        for i in range(pos,pos+len(seq)-1): # fix backbone breaks
+        for i in range(pos,pos+len(seq)-2): # fix backbone breaks
             atom_selction_text(out,i,"O3'",i+1,"P",1.6,0.03,change=True)
         
         out.write("  }\n}")
