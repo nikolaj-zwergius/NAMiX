@@ -8,17 +8,26 @@ inputs = [None,None,A_no_mod, C_no_mod, G_no_mod, T_no_mod, U_no_mod, "",False,F
 driver_tags = {}
 help_mes =  """
                   
+                  Exsample of use: namix -f [pdb file] -r [restrin file] -a [adeine modifcation] -c [cystinemodfincation,resid1,resid2...] -p [prefix]
+                  
                   Input file can be give as the last argument of the call or as -f [filename] or --file [filename]
                   
-                  -o or --overwrite: for overwrite folder content with same name
-                  -r [file] or --restrin: .txt with dot bracket format or .pb from chimira to gennerete basepair restrains for use in phenix generets .eff file
-                  -p [prefix] or --prefix: for give file prefixes and folder suffix
-                  -b [file] or --blueprint: make file for restrin based on ROAD blueprint 
-                  -v: return mod nuc stucture to RNA
                   
-                  -q or --qrna [config]  runs QRNAS if possiable if -q used default config will be used 
-                  -x [map,res] or --phenix [map,res] runs Phenix.real_space_refine if possiable
+                  -r [file] or --restrin: .txt with dot bracket format(not implemented yet)
+                    or .pb from chimira to gennerete basepair restrains for use in phenix generets .eff file
+                  -b [file] or --blueprint: make file for restrin based on ROAD blueprint
+                  
+                  -p [prefix] or --prefix: for give file prefixes and folder suffix
+
+                  -o or --overwrite: for overwrite folder content with same name 
+                  -v: return mod nuc stucture to RNA
+                  -m or --min: Make NAMiX output only the modded pdb file and restrint if given
+
+                  -q or --qrna [config]  runs QRNAS if possiable if -q used default config will be used #not imprlemted yest
+                  -x [map,res] or --phenix [map,res] runs Phenix.real_space_refine if possiable #not imprlemted yest
                 
+                  --config [filename]: runs config file #not imprlemted yest
+
                   Mods are in the format "-[base to replace see below] [modifcation_3_lettercode],resid,resid...."
                   if no resid given all bases of the type will be replaced 
                   
@@ -29,9 +38,6 @@ help_mes =  """
                   -u [modifcaiton,resids] or --umod [modifcaiton,resids]: set modifcation for uracil
                   -t [modifcaiton,resids] or --tmod [modifcaiton,resids]: set modifcation for thymine
 
-
-                  -m or --min: Make NAMiX output only the modded pdb file and restrint if given
-                  --config [filename]: runs config file 
                   
                    """
 
