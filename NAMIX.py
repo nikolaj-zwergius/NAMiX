@@ -66,6 +66,7 @@ def NAMIX(pdbfile:str,restrin_file:str=None,A:modnuc=A_no_mod, C:modnuc=C_no_mod
         raise
 
     if restrin_file:
+        print(restrin_file)
         if restrin_file[0].endswith(".pb"):
             restrint_from_pb(restrin_file[0],dir_path,min)
         else:
@@ -119,7 +120,6 @@ def rev_namix(pdbfile:str): # does not work with add mod like LCA rigth now
                 simple_replace_module({"A":line},mod_dict[line[17:20].strip()],atom_nr,out)
             else:
                 if not line.startswith("SEQRES"):
-                    print(line,atom_nr)
                     out.write(line)
             atom_nr += 1
             

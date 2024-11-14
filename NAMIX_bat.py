@@ -45,7 +45,7 @@ help_mes =  """
 
 if __name__ == "__main__":
     try:
-        opts,args =getopt.getopt(sys.argv[1:], "f:a:c:u:g:t:r:p:b:v:x:q:hom", ["help""file=","overwrite","amod=","cmod=","umod=","tmod=","restrin=","prefix=","blueprint=","min","phenix=","qrna","config"])
+        opts,args =getopt.getopt(sys.argv[1:], "f:a:c:u:g:t:r:p:b:vx:q:hom", ["help""file=","overwrite","amod=","cmod=","umod=","tmod=","restrin=","prefix=","blueprint=","min","phenix=","qrna","config"])
 
     except getopt.GetoptError:
             print(help_mes)
@@ -86,7 +86,7 @@ if __name__ == "__main__":
             inputs[7] = i[1]    
         if i[0] == "-r" or i[0] == "--restrin":
             file = i[1].strip(".\\")
-            inputs[1] = file
+            inputs[1] = [file]
         if i[0] =="-b" or i[0] == "--blueprint":
             try:
                 split_list_bp = i[1].split(",")
