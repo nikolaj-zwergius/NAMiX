@@ -83,8 +83,7 @@ def NAMIX(pdbfile:str,restrin_file:str=None,A:modnuc=A_no_mod, C:modnuc=C_no_mod
             for line in f:
                 if line.startswith("HETATM") and line[17] == "R":#QRNA fix
                     line = f"{'ATOM':<6}{atom_nr:>5}{line[11:17]}{line[18]:<4}{line[21:]}"
-                elif line.startswith("HETATM"):
-                    out.write(line)
+                
                 
                 if line.startswith("SEQRES"):#SEQRES line mod and output NEED fix to work with specifed residues
                     line = line[:16] + line[16:-2].replace("A  ",f"{A.name:<3}") + line[-2:].replace("A",f"{A.name:<3}")
@@ -104,6 +103,8 @@ def NAMIX(pdbfile:str,restrin_file:str=None,A:modnuc=A_no_mod, C:modnuc=C_no_mod
                         current_res = int(line[22:26].strip())
                     if line[12:16].strip() not in residue.keys():# base case
                         residue[line[12:16].strip()] = line
+                elif line.startswith("HETATM"):
+                    out.write(line)
 
             atom_nr = run_modules(residue,atom_nr,A,C,G,T,U,out)
                          
