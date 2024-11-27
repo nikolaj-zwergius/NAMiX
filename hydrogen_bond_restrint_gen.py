@@ -95,7 +95,7 @@ def restrint_from_pb(file,dir_path="",minimum = False): #restrints based on chim
     if dir_path and not minimum:copy(file,dir_path)
 
 
-def restrint_from_road(ssfile,pos=1,dir_path ="",minimum = False): #restrints based on ROAD dot backet file target.txt from trace patteren
+def restrint_from_road(ssfile,pos=1,dir_path ="",minimum = False,bp_file=""): #restrints based on ROAD dot backet file target.txt from trace patteren
     #dict of basepair interactions
     pos = int(pos)
     basepairs = {"A":{"U":(("N6","O4"),("N1","N3"))},
@@ -166,4 +166,7 @@ def restrint_from_road(ssfile,pos=1,dir_path ="",minimum = False): #restrints ba
             atom_selction_text(out,i,"O3'",i+1,"P",1.6,0.03,change=True)
         
         out.write("  }\n}")
-    if dir_path and not minimum:copy(ssfile,dir_path)
+    if dir_path and not minimum:
+        copy(ssfile,dir_path)
+        copy(bp_file,dir_path)
+

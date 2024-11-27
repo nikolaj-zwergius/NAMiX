@@ -101,7 +101,7 @@ if __name__ == "__main__":
                     out.write(file[0][2:]+"\n")
                     out.write(file[1]+"\n")
                     out.write(file[2]+"\n")
-                inputs[1] = (f"bp_restrint{inputs[0]}.txt",id)
+                inputs[1] = (f"bp_restrint{inputs[0]}.txt",id,split_list_bp[0])
             except:
                 print("\n\n could not run: perl properly not installed")
         
