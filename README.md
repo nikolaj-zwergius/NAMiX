@@ -25,12 +25,39 @@ After this add the NAMIX folder to your PATH
 
 ### Windows
 
+### Mac
+
+This software has not been tested on Mac OS but show be compatiable, but no guarantee is made 
 
 ### If using ROAD style blueprint
 If you want to use ROAD style blueprints for the generation of base paring restraints. you need to have perl install in addtion to python, as the code for convereting the blueprint to dot-barcket format, is taken from the [ROAD](https://github.com/esa-lab/ROAD) repository.
 
 ## Usage
+NAMIX can be called by just writting the following:
 
+```bash
+namix -f [filename] [options]
+```
+The -f [filename] is the only part that is mandatory
+
+For a list of options see below
+-r [file]: .txt with dot bracket format(not implemented yet) or .pb from chimira to gennerete basepair restrains for use in phenix generets .eff file
+-b [file]: make file for restrin based on ROAD blueprint
+                  
+-p [prefix] or --prefix: for give file prefixes and folder suffix
+
+-o or --overwrite: for overwrite folder content with same name 
+-v: return mod nuc stucture to RNA
+-m or --min: Make NAMiX output only the modded pdb file and restrint if given
+
+Mods are in the format "-[base to replace see below] [modifcation_3_lettercode],resid,resid...."
+if no res ID is given all bases of the type will be replaced                  
+                  
+-a [modifcaiton,resids]: set modifcation for adenine
+-c [modifcaiton,resids]: set modifcation for cytosine
+-g [modifcaiton,resids]: set modifcation for guanine
+-u [modifcaiton,resids]: set modifcation for uracil
+-t [modifcaiton,resids]: set modifcation for thymine
 
 ## Contributing
 1. Fork the repository.
