@@ -7,7 +7,7 @@ parent_dir_path = os.path.abspath(os.path.join(dir_path, os.pardir))
 
 from def_class import modnuc, Wrong_Base_Error
 from define_mods import *
-from hydrogen_bond_restrint_gen import restrint_from_road, restrint_from_pb
+from hydrogen_bond_restrint_gen import restraints_from_road, restraints_from_pb
 
 from shutil import copy
 
@@ -67,9 +67,9 @@ def NAMIX(pdbfile:str,restrin_file:str=None,A:modnuc=A_no_mod, C:modnuc=C_no_mod
 
     if restrin_file:
         if restrin_file[0].endswith(".pb"):
-            restrint_from_pb(restrin_file[0],dir_path,min)
+            restraints_from_pb(restrin_file[0],dir_path,min)
         else:
-            restrint_from_road(restrin_file[0],restrin_file[1],dir_path,min,restrin_file[2])
+            restraints_from_road(restrin_file[0],restrin_file[1],dir_path,min,restrin_file[2])
     if not min:
         for i in range(5):#copy .cif into folder for XNA
             _copy_cif(bases[i],dir_path)
@@ -113,14 +113,14 @@ def rev_namix(pdbfile:str): # does not work with add mod like LCA rigth now
     atom_nr = 1
     with open(pdbfile + ".pdb") as f, open(pdbfile + "_rev.pdb","w") as out:
         for line in f:
-            if line[17:20].strip() in mods:
-                if not mod_dict[line[17:20].strip()].inveresed:
-                    mod_dict[line[17:20].strip()].invers_replacment()
+            if line[17:20].strip() in mods and line.startswith("HETATM"):
+                if not mod_dict[line[17:20].strip()].inverted:
+                    mod_dict[line[17:20].strip()].invers_replacement()
                 simple_replace_module({"A":line},mod_dict[line[17:20].strip()],atom_nr,out)
             else:
-                if not line.startswith("SEQRES"):
+                if not line.startswith("SEQRES") and not line.startswith("LINK"):
                     out.write(line)
-            atom_nr += 1
+                atom_nr += 1
             
             if line.startswith("SEQRES"):#SEQRES line mod and output
                     for mod in mods:

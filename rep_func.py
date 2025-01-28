@@ -3,6 +3,7 @@
 from io import TextIOWrapper
 from def_class import modnuc
 import numpy as np
+
 def new_pdb_line(org_line:str,type:str,name:str,atom_nr:int,rep:str="") -> str:
     new_line = []
     new_line.append(f"{type:<6}")
@@ -66,20 +67,20 @@ def simple_replace_module(res:dict,mod:modnuc,atom_nr:int,out:TextIOWrapper) -> 
     for atom in res.keys():
         line = res[atom]
         modifed = False #set defualt at not changed
-        if mod.have_replacments: # cheking for replacments in the modnuc
-            for rep in mod.replacments: # testing all replacmients in modnuc
+        if mod.have_replacements: # cheking for replacments in the modnuc
+            for rep in mod.replacements: # testing all replacmients in modnuc
                 if line[11:16].strip() == "".join(rep[0]): # checking for match in model
                     if rep[1][0] == None:
                         atom_nr -= 1
                     else:
                         out.write(new_pdb_line(line,mod.type,mod.name,atom_nr,rep = rep[1])) #gerneration new line
                     modifed =  True # return to inform change made
-            if mod.have_replacments and not modifed:
+            if mod.have_replacements and not modifed:
                 out.write(new_pdb_line(line,mod.type,mod.name,atom_nr)) # update type and name to match rest of nuclotide
         atom_nr +=1
     return atom_nr
 
-def addtion_atom_generation(res:dict,mod:modnuc,atom_nr:int,out:TextIOWrapper): #placeholder for adddtion logic
+def addition_atom_generation(res:dict,mod:modnuc,atom_nr:int,out:TextIOWrapper): #placeholder for adddtion logic
 
     if (int(res[list(res.keys())[0]][23:26]) not in mod.mods) and (mod.mods != []):
         atom_nr = no_replace(res,mod,atom_nr,out)
@@ -87,9 +88,9 @@ def addtion_atom_generation(res:dict,mod:modnuc,atom_nr:int,out:TextIOWrapper): 
 
     atom_nr = simple_replace_module(res,mod,atom_nr,out)
     
-    if not mod.calculated_vector: mod.calculate_vectors_for_addtion()
+    if not mod.calculated_vector: mod.calculate_vectors_for_addition()
     
-    for add in mod.addiations:
+    for add in mod.additions:
 
         res_compare_coord = res["".join(add[1])][31:54].split()
         res_origin_coord = res["".join(add[0])][31:54].split()
