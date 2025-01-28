@@ -1,8 +1,9 @@
 import re
 from io import TextIOWrapper
 from shutil import copy
+from os import remove
 
-def atom_selction_text(out:TextIOWrapper,key1, key2, key3, key4, dist,sigma, slack=0, change = None ,chain1 = None, chain2 = None): # code for formating the .eff file
+def atom_selection_text(out:TextIOWrapper,key1, key2, key3, key4, dist,sigma, slack=0, change = None ,chain1 = None, chain2 = None): # code for formatting the .eff file
     chain1_txt = ""
     chain2_txt = ""
     if chain1:
@@ -36,10 +37,10 @@ def parallelity(out:TextIOWrapper,base1,resid1,base2,resid2, angel,sigma,chain1 
     out.write(f"      sigma = {sigma}\n      target_angle_deg = {angel}\n")
     out.write("    }\n")
 
-def restrint_from_pb(file,dir_path="",minimum = False): #restrints based on chimira .pb file
+def restraints_from_pb(file,dir_path="",minimum = False): #restraints based on chimeraX .pb file
 
     with open(file) as f, open(f"{dir_path}/{file[:-4]}_pb.eff","w") as out:
-        restrints = []
+        restraints = []
         chains = {}
         plan = {}
         pairs = []
@@ -55,13 +56,13 @@ def restrint_from_pb(file,dir_path="",minimum = False): #restrints based on chim
                 rest = [re_split[0].split(":")[0][1:].split("/")[1],re_split[0].split("@")[0][len(re_split[0].split(":")[0])+1:],re_split[0].split("@")[1]]
                 rest2 = [re_split[1].split(":")[0][1:].split("/")[1],re_split[1].split("@")[0][len(re_split[0].split(":")[0])+1:],re_split[1].split("@")[1]]
                 rest.extend(rest2)
-                restrints.append(rest)
+                restraints.append(rest)
             else:
                 re_split = re.split("\s",line)
                 rest = [re_split[0].split(":")[0][1:],re_split[0].split("@")[0][len(re_split[0].split(":")[0])+1:],re_split[0].split("@")[1]]
                 rest2 = [re_split[1].split(":")[0][1:],re_split[1].split("@")[0][len(re_split[0].split(":")[0])+1:],re_split[1].split("@")[1]]
                 rest.extend(rest2)
-                restrints.append(rest)
+                restraints.append(rest)
             
             if rest[2] not in blocked and rest2[2] not in blocked:
                 mini = min(int(rest[1]),int(rest2[1]))
@@ -79,24 +80,24 @@ def restrint_from_pb(file,dir_path="",minimum = False): #restrints based on chim
 
         # write out file
         out.write("geometry_restraints {\n  edits {\n")
-        for res in restrints:
+        for res in restraints:
             # remove backbone interactions
             if res[2] in blocked or res[5] in blocked:
                 continue
-            atom_selction_text(out,res[1],res[2],res[4],res[5],3.4,0.075,0.075,chain1=res[0],chain2=res[3]) # defines all h bonds
-            atom_selction_text(out,res[1],res[2],res[1],f"N{res[2][1]}",1,0.01,0.01,chain1=res[0],chain2=res[0]) #fixes H breakign from modnuc if bonded
+            atom_selection_text(out,res[1],res[2],res[4],res[5],3.4,0.075,0.075,chain1=res[0],chain2=res[3]) # defines all h bonds
+            atom_selection_text(out,res[1],res[2],res[1],f"N{res[2][1]}",1,0.01,0.01,chain1=res[0],chain2=res[0]) #fixes H breaking from modnuc if bonded
 
         for chain in chains.keys():
             for i in range(1,chains[chain]):
-                    atom_selction_text(out,i,"O3'",i+1,"P",1.6,0.01,0.01,True,chain1=chain,chain2=chain) # fixes backbone from breakting
+                    atom_selection_text(out,i,"O3'",i+1,"P",1.6,0.01,0.01,True,chain1=chain,chain2=chain) # fixes backbone from breaking
         for pair in pairs:
             parallelity(out,"N",pair[0],"N",pair[1],0,0.0335)
         out.write("  }\n}")
     if dir_path and not minimum:copy(file,dir_path)
 
 
-def restrint_from_road(ssfile,pos=1,dir_path ="",minimum = False): #restrints based on ROAD dot backet file target.txt from trace patteren
-    #dict of basepair interactions
+def restraints_from_road(trace_file,pos=1,dir_path ="",minimum = False,bp_file=""): #restraints based on ROAD dot bracket file target.txt from trace pattern
+    #dict of base-pair interactions
     pos = int(pos)
     basepairs = {"A":{"U":(("N6","O4"),("N1","N3"))},
                  "C":{"G":(("N4","O6"),("N3","N1"),("O2","N2"))},
@@ -109,12 +110,12 @@ def restrint_from_road(ssfile,pos=1,dir_path ="",minimum = False): #restrints ba
                     "G":[("H1","N1"),("H21","N2")],
                     "U":[("H3","N3")]
                     }
-    with open(ssfile) as f, open(f"{dir_path}/{ssfile[:-4]}_db.eff","w") as out:
+    with open(trace_file) as f, open(f"{dir_path}/{trace_file[:-4]}_bp.eff","w") as out:
         # list for the differet backets
-        backet1 = []
-        backet2 = []
-        backet3 = []
-        backet4 = []
+        bracket1 = []
+        bracket2 = []
+        bracket3 = []
+        bracket4 = []
 
         pairs = [] # list of all basepairs
         
@@ -129,21 +130,21 @@ def restrint_from_road(ssfile,pos=1,dir_path ="",minimum = False): #restrints ba
         index = pos
         for char in dot_bac:
             if char == "(":
-                backet1.append(index)
+                bracket1.append(index)
             elif char == ")":
-                pairs.append((backet1.pop(),index))
+                pairs.append((bracket1.pop(),index))
             elif char == "[":
-                backet2.append(index)
+                bracket2.append(index)
             elif char == "]":
-                pairs.append((backet2.pop(),index))
+                pairs.append((bracket2.pop(),index))
             elif char == "{":
-                backet3.append(index)
+                bracket3.append(index)
             elif char == "}":
-                pairs.append((backet3.pop(),index))
+                pairs.append((bracket3.pop(),index))
             elif char == "<":
-                backet4.append(index)
+                bracket4.append(index)
             elif char == ">":
-                pairs.append((backet4.pop(),index))
+                pairs.append((bracket4.pop(),index))
             index += 1
         
         # writiing the file
@@ -153,17 +154,15 @@ def restrint_from_road(ssfile,pos=1,dir_path ="",minimum = False): #restrints ba
             base2 = seq[pair[1]-pos]
             parallelity(out,base1,pair[0],base2,pair[1],0,0.027)
           
-            for interaction in basepairs[base1][base2]: #write out each hbond
-                atom_selction_text(out,pair[0],interaction[0],pair[1],interaction[1],3.4,0.05)
-            #
-            #for fix in hydrogen_fix[base1]: # fix h breaks for base 1
-            #    atom_selction_text(out,pair[0]+1,fix[0],pair[0]+1,fix[1],1,0.01,0.01)
-
-            #for fix in hydrogen_fix[base2]: # fix h breaks for base 2
-            #    atom_selction_text(out,pair[1]+1,fix[0],pair[1]+1,fix[1],1,0.01,0.01)
-        
+            for interaction in basepairs[base1][base2]: #write out each h-bond
+                atom_selection_text(out,pair[0],interaction[0],pair[1],interaction[1],3,0.02)
+            
         for i in range(pos,pos+len(seq)-2): # fix backbone breaks
-            atom_selction_text(out,i,"O3'",i+1,"P",1.6,0.03,change=True)
+            atom_selection_text(out,i,"O3'",i+1,"P",1.61,0.03,change=True)
         
         out.write("  }\n}")
-    if dir_path and not minimum:copy(ssfile,dir_path)
+    if dir_path and not minimum:
+        copy(trace_file,dir_path)
+        copy(bp_file,dir_path)
+        remove(trace_file)
+

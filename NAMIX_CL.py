@@ -8,35 +8,35 @@ inputs = [None,None,A_no_mod, C_no_mod, G_no_mod, T_no_mod, U_no_mod, "",False,F
 driver_tags = {}
 help_mes =  """
                   
-                  Exsample of use: namix -f [pdb file] -r [restrin file] -a [adeine modifcation] -c [cystinemodfincation,resid1,resid2...] -p [prefix]
+                  Example of use: namix -f [pdb file] -r [restrain file] -a [adenine modification] -c [cytosine modification,resid1,resid2...] -p [prefix]
                   
                   Input file can be give as the last argument of the call or as -f [filename] or --file [filename]
                   
                   
-                  -r [file] or --restrin: .txt with dot bracket format(not implemented yet)
-                    or .pb from chimira to gennerete basepair restrains for use in phenix generets .eff file
-                  -b [file] or --blueprint: make file for restrin based on ROAD blueprint
+                  -r [file] or --restrain: .txt with dot bracket format(not implemented yet)
+                    or .pb from chimera to generate basepair restrains for use in phenix generates .eff file
+                  -b [file] or --blueprint: make file for restrains based on ROAD blueprint
                   
                   -p [prefix] or --prefix: for give file prefixes and folder suffix
 
                   -o or --overwrite: for overwrite folder content with same name 
-                  -v: return mod nuc stucture to RNA
-                  -m or --min: Make NAMiX output only the modded pdb file and restrint if given
+                  -v: return mod nuc structure to RNA
+                  -m or --min: Make NAMiX output only the modded pdb file and restraint if given
 
-                  -q or --qrna [config]  runs QRNAS if possiable if -q used default config will be used #not imprlemted yest
-                  -x [map,res] or --phenix [map,res] runs Phenix.real_space_refine if possiable #not imprlemted yest
+                  -q or --qrna [config]  runs QRNAS if possible if -q used default config will be used #not implemented yet
+                  -x [map,res] or --phenix [map,res] runs Phenix.real_space_refine if possible #not implemented yet
                 
-                  --config [filename]: runs config file #not imprlemted yest
+                  --config [filename]: runs config file #not implemented yet
 
-                  Mods are in the format "-[base to replace see below] [modifcation_3_lettercode],resid,resid...."
+                  Mods are in the format "-[base to replace see below] [modification_3_letter_code],resid,resid...."
                   if no resid given all bases of the type will be replaced 
                   
                   
-                  -a [modifcaiton,resids] or --amod [modifcaiton,resids]: set modifcation for adenine
-                  -c [modifcaiton,resids] or --cmod [modifcaiton,resids]: set modifcation for cytosine
-                  -g [modifcaiton,resids] or --gmod [modifcaiton,resids]: set modifcation for guanine
-                  -u [modifcaiton,resids] or --umod [modifcaiton,resids]: set modifcation for uracil
-                  -t [modifcaiton,resids] or --tmod [modifcaiton,resids]: set modifcation for thymine
+                  -a [modification,resids] or --amod [modification,resids]: set modification for adenine
+                  -c [modification,resids] or --cmod [modification,resids]: set modification for cytosine
+                  -g [modification,resids] or --gmod [modification,resids]: set modification for guanine
+                  -u [modification,resids] or --umod [modification,resids]: set modification for uracil
+                  -t [modification,resids] or --tmod [modification,resids]: set modification for thymine
 
                   
                    """
@@ -45,7 +45,7 @@ help_mes =  """
 
 if __name__ == "__main__":
     try:
-        opts,args =getopt.getopt(sys.argv[1:], "f:a:c:u:g:t:r:p:b:vx:q:hom", ["help""file=","overwrite","amod=","cmod=","umod=","tmod=","restrin=","prefix=","blueprint=","min","phenix=","qrna","config"])
+        opts,args =getopt.getopt(sys.argv[1:], "f:a:c:u:g:t:r:p:b:vx:q:hom", ["help""file=","overwrite","amod=","cmod=","umod=","tmod=","restrain=","prefix=","blueprint=","min","phenix=","qrna","config"])
 
     except getopt.GetoptError:
             print(help_mes)
@@ -69,7 +69,7 @@ if __name__ == "__main__":
         if i[0] == "-h" or "--help" == i[0]:
             print(help_mes)
             
-            print("\t\t  3 letter code for modificationsn\n")
+            print("\t\t  3 letter codes for modification\n")
             for key in mod_dict:
                 print(f"\t\t  {mod_dict[key]}")
             print("\n")
@@ -84,7 +84,7 @@ if __name__ == "__main__":
             inputs[8] = True
         if i[0] == "-p" or i[0] == "--prefix":
             inputs[7] = i[1]    
-        if i[0] == "-r" or i[0] == "--restrin":
+        if i[0] == "-r" or i[0] == "--restrain":
             file = i[1].strip(".\\")
             inputs[1] = [file]
         if i[0] =="-b" or i[0] == "--blueprint":
@@ -95,13 +95,13 @@ if __name__ == "__main__":
                 except:
                     id = 1
                 pipe = subprocess.run(["perl", f"{os.path.dirname(__file__)}/trace_pattern.pl", f"{os.getcwd()}/{split_list_bp[0]}"],capture_output=True)
-                with open(f"bp_restrint{inputs[0]}.txt","w") as out:
+                with open(f"bp_restrain{inputs[0]}.txt","w") as out:
                     file = str(pipe.stdout).split("\\n")
                     print(file)
                     out.write(file[0][2:]+"\n")
                     out.write(file[1]+"\n")
                     out.write(file[2]+"\n")
-                inputs[1] = (f"bp_restrint{inputs[0]}.txt",id)
+                inputs[1] = (f"bp_restrain{inputs[0]}.txt",id,split_list_bp[0])
             except:
                 print("\n\n could not run: perl properly not installed")
         
