@@ -1,6 +1,6 @@
 import re
 from io import TextIOWrapper
-from shutil import copy
+from shutil import copy,move
 
 def atom_selction_text(out:TextIOWrapper,key1, key2, key3, key4, dist,sigma, slack=0, change = None ,chain1 = None, chain2 = None): # code for formating the .eff file
     chain1_txt = ""
@@ -167,6 +167,6 @@ def restrint_from_road(ssfile,pos=1,dir_path ="",minimum = False,bp_file=""): #r
         
         out.write("  }\n}")
     if dir_path and not minimum:
-        copy(ssfile,dir_path)
+        move(ssfile,dir_path)
         copy(bp_file,dir_path)
 
