@@ -23,7 +23,7 @@ class modnuc: # overall class for modnucliotide
         atom = re.split("(?<=\\D)(?=\\d)|(?<=\\d)(?=\\D)",atom)
         return atom
 
-    def __init__(self,name:str,type:str,old_base:str,replace_module,cif_path=None,rep:list = None, add:list = None,desrib="no desribtion") -> None:
+    def __init__(self,name:str,type:str,old_base:str,replace_module,cif_path=None,rep:list = None, add:list = None,description="no desribtion") -> None:
         self.name = name
         self.old_base = old_base
         self.type = type
@@ -34,7 +34,7 @@ class modnuc: # overall class for modnucliotide
         self.have_replacments = False
         self.rep_module = replace_module
         self.cif_path = cif_path 
-        self.desribstion  = desrib
+        self.description  = description
         self.inveresed  = False
         self.calculated_vector = False
         self.mods = []
