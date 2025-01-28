@@ -24,6 +24,7 @@ LCA = modnuc("LCA","HETATM","A",addition_atom_generation,"/mods/LCA.cif",replace
 LCG = modnuc("LCG","HETATM","G",addition_atom_generation,None,replacements= [("O2'",None),("HO2'",None)], add=[("C3'","C2'","C6'"),("C3'","C2'","O2'")],description="Locked Guanine | Not implemented yet")# LNA  G NOT DONE
 
 
+
 mod_dict ={UFT.name:UFT,CFZ.name:CFZ,AF2.name:AF2,GF2.name:GF2,
            UMX.name:UMX,LCC.name:LCC,LCA.name:LCA,LCG.name:LCG
            }

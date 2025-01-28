@@ -23,7 +23,9 @@ class modnuc: # overall class for modified nucleotide
         atom = re.split("(?<=\\D)(?=\\d)|(?<=\\d)(?=\\D)",atom)
         return atom
 
+
     def __init__(self,name:str,type:str,old_base:str,replace_module,cif_path=None,replacements:list = None, add:list = None,description="no description") -> None:
+      
         self.name = name
         self.old_base = old_base
         self.type = type
@@ -35,7 +37,9 @@ class modnuc: # overall class for modified nucleotide
         self.rep_module = replace_module
         self.cif_path = cif_path 
         self.description  = description
+
         self.inverted  = False
+
         self.calculated_vector = False
         self.mods = []
         if replacements: # convert the list of replacments to the co
