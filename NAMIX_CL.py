@@ -27,6 +27,7 @@ help_mes =  """
                   -x [map,res] or --phenix [map,res] runs Phenix.real_space_refine if possible #not implemented yet
                 
                   --config [filename]: runs config file #not implemented yet
+                  --chain [Chain ID]: adds chain id to .eff for multi chain models 
 
                   Mods are in the format "-[base to replace see below] [modification_3_letter_code],resid,resid...."
                   if no resid given all bases of the type will be replaced 
@@ -45,7 +46,7 @@ help_mes =  """
 
 if __name__ == "__main__":
     try:
-        opts,args =getopt.getopt(sys.argv[1:], "f:a:c:u:g:t:r:p:b:vx:q:hom", ["help""file=","overwrite","amod=","cmod=","umod=","tmod=","restrain=","prefix=","blueprint=","min","phenix=","qrna","config"])
+        opts,args =getopt.getopt(sys.argv[1:], "f:a:c:u:g:t:r:p:b:vx:q:hom", ["help""file=","overwrite","amod=","cmod=","umod=","tmod=","restrain=","prefix=","blueprint=","min","phenix=","qrna","config","chain="])
 
     except getopt.GetoptError:
             print(help_mes)
@@ -97,7 +98,6 @@ if __name__ == "__main__":
                 pipe = subprocess.run(["perl", f"{os.path.dirname(__file__)}/trace_pattern.pl", f"{os.getcwd()}/{split_list_bp[0]}"],capture_output=True)
                 with open(f"bp_restrain{inputs[0]}.txt","w") as out:
                     file = str(pipe.stdout).split("\\n")
-                    print(file)
                     out.write(file[0][2:]+"\n")
                     out.write(file[1]+"\n")
                     out.write(file[2]+"\n")
@@ -105,6 +105,10 @@ if __name__ == "__main__":
             except:
                 print("\n\n could not run: perl properly not installed")
         
+        if i[0] == "--chain":
+            bp_list = list(inputs[1])
+            bp_list.append(i[1])
+            inputs[1]= tuple(bp_list)
         
         if i[0] == "-u" or i[0] == "--umod":
             split_list = i[1].split(",")
