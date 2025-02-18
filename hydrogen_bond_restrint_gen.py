@@ -96,7 +96,7 @@ def restraints_from_pb(file,dir_path="",minimum = False): #restraints based on c
     if dir_path and not minimum:copy(file,dir_path)
 
 
-def restraints_from_road(trace_file,pos=1,dir_path ="",minimum = False,bp_file=""): #restraints based on ROAD dot bracket file target.txt from trace pattern
+def restraints_from_road(trace_file,pos=1,dir_path ="",minimum = False,bp_file="",chain=""): #restraints based on ROAD dot bracket file target.txt from trace pattern
     #dict of base-pair interactions
     pos = int(pos)
     basepairs = {"A":{"U":(("N6","O4"),("N1","N3"))},
@@ -152,13 +152,13 @@ def restraints_from_road(trace_file,pos=1,dir_path ="",minimum = False,bp_file="
         for pair in pairs:
             base1 = seq[pair[0]-pos]
             base2 = seq[pair[1]-pos]
-            parallelity(out,base1,pair[0],base2,pair[1],0,0.027)
+            parallelity(out,base1,pair[0],base2,pair[1],0,0.027,chain1=chain,chain2=chain)
           
             for interaction in basepairs[base1][base2]: #write out each h-bond
-                atom_selection_text(out,pair[0],interaction[0],pair[1],interaction[1],3,0.02)
+                atom_selection_text(out,pair[0],interaction[0],pair[1],interaction[1],3,0.02,chain1=chain,chain2=chain)
             
         for i in range(pos,pos+len(seq)-2): # fix backbone breaks
-            atom_selection_text(out,i,"O3'",i+1,"P",1.61,0.03,change=True)
+            atom_selection_text(out,i,"O3'",i+1,"P",1.61,0.03,change=True,chain1=chain,chain2=chain)
         
         out.write("  }\n}")
     if dir_path and not minimum:
