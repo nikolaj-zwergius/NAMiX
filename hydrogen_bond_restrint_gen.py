@@ -10,7 +10,6 @@ def atom_selection_text(out:TextIOWrapper,key1, key2, key3, key4, dist,sigma, sl
          chain1_txt = f"chain {chain1} and"
     if chain2:
          chain2_txt = f"chain {chain2} and"
-         
     out.write("    bond {\n")
     if change: out.write("      action = change\n")
     out.write(f"      atom_selection_1 = {chain1_txt} resid {key1} and name {key2}\n")
@@ -36,6 +35,27 @@ def parallelity(out:TextIOWrapper,base1,resid1,base2,resid2, angel,sigma,chain1 
     out.write(f"      atom_selection_2 = {chain2_txt}resid {resid2} and (name C5 or name C6 or name N1 or name C2 or name N3 or name C4)\n")
     out.write(f"      sigma = {sigma}\n      target_angle_deg = {angel}\n")
     out.write("    }\n")
+
+def stack(dir_path,trace_file,kissing_loops,chain1=None,chain2=None):
+    with open(f"{dir_path}/{trace_file[:-4]}_ss.eff","w") as stack_file:
+        stack_file.write("pdb_interpretation {\n" +" "*2+"secondary_structure {\n"+ " "*4+"nucleic_acid {\n")
+        chain1_txt = ""
+        chain2_txt = ""
+        if chain1:
+            chain1_txt = f"chain {chain1} and"
+        if chain2:
+            chain2_txt = f"chain {chain2} and"
+        for kiss in kissing_loops:
+            stack_file.write(" "*6+"stacking_pair {\n")
+            stack_file.write(" "*8+f"base1 = {chain1_txt} resid {kiss[0][1]}\n")
+            stack_file.write(" "*8+f"base2 = {chain2_txt} resid {kiss[1][1]}\n"+" "*6+"}\n")
+            stack_file.write(" "*6+"stacking_pair {\n")
+            stack_file.write(" "*8+f"base1 = {chain1_txt} resid {kiss[0][0]+2}\n")
+            stack_file.write(" "*8+f"base2 = {chain2_txt} resid {kiss[1][1]-1}\n"+" "*6+"}\n")
+            stack_file.write(" "*6+"stacking_pair {\n")
+            stack_file.write(" "*8+f"base1 = {chain1_txt} resid {kiss[1][0]+2}\n")
+            stack_file.write(" "*8+f"base2 = {chain2_txt} resid {kiss[0][1]-1}\n"+" "*6+"}\n")
+        stack_file.write(" "*4+"}\n"+" "*2+"}\n"+"}\n")
 
 def restraints_from_pb(file,dir_path="",minimum = False): #restraints based on chimeraX .pb file
 
@@ -99,7 +119,7 @@ def restraints_from_pb(file,dir_path="",minimum = False): #restraints based on c
 def restraints_from_road(trace_file,pos=1,dir_path ="",minimum = False,bp_file="",chain=""): #restraints based on ROAD dot bracket file target.txt from trace pattern
     #dict of base-pair interactions
     pos = int(pos)
-    basepairs = {"A":{"U":(("N6","O4"),("N1","N3"))},
+    basepairs = {"A":{"U":(("N6","O4"),("N1","N3")),"A":(("N1","N6"),("N6","N1"))},
                  "C":{"G":(("N4","O6"),("N3","N1"),("O2","N2"))},
                  "G":{"C":(("O6","N4"),("N1","N3"),("N2","O2")),"U":(("O6","N3"),("N1","O2"))},
                  "U":{"A":(("O4","N6"),("N3","N1")),"G":(("N3","O6"),("O2","N1"))}
@@ -128,6 +148,7 @@ def restraints_from_road(trace_file,pos=1,dir_path ="",minimum = False,bp_file="
 
         # read Dot backet notation
         index = pos
+        kissing_loop_id = []
         for char in dot_bac:
             if char == "(":
                 bracket1.append(index)
@@ -137,6 +158,8 @@ def restraints_from_road(trace_file,pos=1,dir_path ="",minimum = False,bp_file="
                 bracket2.append(index)
             elif char == "]":
                 pairs.append((bracket2.pop(),index))
+                if dot_bac[pairs[-1][0]-8] == ".":
+                    kissing_loop_id.append(((pairs[-1][0]-7,pairs[-1][0]-6,pairs[-1][0]+1),(pairs[-1][1]-2,pairs[-1][1]-1,pairs[-1][1]+6)))
             elif char == "{":
                 bracket3.append(index)
             elif char == "}":
@@ -146,9 +169,19 @@ def restraints_from_road(trace_file,pos=1,dir_path ="",minimum = False,bp_file="
             elif char == ">":
                 pairs.append((bracket4.pop(),index))
             index += 1
-        
+
+
         # writiing the file
         out.write("geometry_restraints {\n  edits {\n")
+        
+        for kiss in kissing_loop_id:
+            parallelity(out,"A",kiss[0][0],"A",kiss[0][2],0,0.27,chain1=chain,chain2=chain)
+            parallelity(out,"A",kiss[1][0],"A",kiss[1][2],0,0.27,chain1=chain,chain2=chain)
+            atom_selection_text(out,kiss[0][0],basepairs["A"]["A"][0][0],kiss[0][2],basepairs["A"]["A"][0][1],3,0.02,chain1=chain,chain2=chain)
+            atom_selection_text(out,kiss[0][0],basepairs["A"]["A"][1][0],kiss[0][2],basepairs["A"]["A"][1][1],3,0.02,chain1=chain,chain2=chain)
+            atom_selection_text(out,kiss[1][0],basepairs["A"]["A"][0][0],kiss[1][2],basepairs["A"]["A"][0][1],3,0.02,chain1=chain,chain2=chain)
+            atom_selection_text(out,kiss[1][0],basepairs["A"]["A"][1][0],kiss[1][2],basepairs["A"]["A"][1][1],3,0.02,chain1=chain,chain2=chain)
+        
         for pair in pairs:
             base1 = seq[pair[0]-pos]
             base2 = seq[pair[1]-pos]
@@ -161,6 +194,10 @@ def restraints_from_road(trace_file,pos=1,dir_path ="",minimum = False,bp_file="
             atom_selection_text(out,i,"O3'",i+1,"P",1.61,0.03,change=True,chain1=chain,chain2=chain)
         
         out.write("  }\n}")
+    
+    if kissing_loop_id:
+        stack(dir_path,trace_file,kissing_loop_id,chain,chain)
+
     if dir_path and not minimum:
         copy(trace_file,dir_path)
         copy(bp_file,dir_path)
