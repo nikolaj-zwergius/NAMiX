@@ -44,6 +44,7 @@ def run_modules(residue:dict,atom_nr:int,A:modnuc,C:modnuc,G:modnuc,T:modnuc,U:m
 def NAMIX(pdbfile:str,restrin_file:str=None,A:modnuc=A_no_mod, C:modnuc=C_no_mod, G:modnuc=G_no_mod, T:modnuc=T_no_mod, U:modnuc=U_no_mod, Prefix:str ="",overwrite = False,min=False) -> None:
     standard_bases = [A_no_mod,U_no_mod,C_no_mod,G_no_mod,T_no_mod]
     bases = [A,U,C,G,T]
+
     for i in range(5): # check that modnucs used match the old base they are intented to replace
         _base_equality_check(bases[i],standard_bases[i])
     
@@ -83,8 +84,11 @@ def NAMIX(pdbfile:str,restrin_file:str=None,A:modnuc=A_no_mod, C:modnuc=C_no_mod
             current_res = 0
             
             for line in f:
-                if line.startswith("HETATM") and line[17] == "R":#QRNA fix
+                
+                if (line.startswith("HETATM") or line.startswith("ATOM")) and line[17] == "R":#QRNA fix
                     line = f"{'ATOM':<6}{atom_nr:>5}{line[11:17]}{line[18]:<4}{line[21:]}"
+                if line.startswith("ATOM") and (line[12] == "H" or line[13] == "H"): # remove H
+                    line = ""
                 
                 if line.startswith("SEQRES"):#SEQRES line mod and output NEED fix to work with specifed residues
                     line = line[:16] + line[16:-2].replace("A  ",f"{A.name:<3}") + line[-2:].replace("A",f"{A.name:<3}")
@@ -96,6 +100,7 @@ def NAMIX(pdbfile:str,restrin_file:str=None,A:modnuc=A_no_mod, C:modnuc=C_no_mod
                     continue
                
                 if line.startswith("ATOM") or line.startswith("HETATM"):
+                    line = line.replace("*","'")
                     if current_res == 0: #start case
                         current_res = int(line[22:26].strip())
                     if current_res != int(line[22:26].strip()): # new residue case
