@@ -1,5 +1,4 @@
-# Change the filename.pdb to the target file and the output filename to desired name
-# This script works for pdb files that do not have hydrogens included
+
 
 from def_class import modnuc, no_mod
 from rep_func import no_replace,simple_replace_module,addition_atom_generation
