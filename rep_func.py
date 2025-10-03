@@ -53,6 +53,31 @@ def align_vectors(a, b):
     R = np.eye(3, dtype=np.float64) + Vmat + (Vmat.dot(Vmat) * h)
     return R
 
+def umeyama(P, Q):
+    assert P.shape == Q.shape
+    n, dim = P.shape
+
+    centeredP = P - P.mean(axis=0)
+    centeredQ = Q - Q.mean(axis=0)
+
+    C = np.dot(np.transpose(centeredP), centeredQ) / n
+
+    V, S, W = np.linalg.svd(C)
+    d = (np.linalg.det(V) * np.linalg.det(W)) < 0.0
+
+    if d:
+        S[-1] = -S[-1]
+        V[:, -1] = -V[:, -1]
+
+    R = np.dot(V, W)
+
+    varP = np.var(P, axis=0).sum()
+    c = 1/varP * np.sum(S) # scale factor
+
+    t = Q.mean(axis=0) - P.mean(axis=0).dot(c*R)
+
+    return c, R, t
+
 def no_replace(res:dict,mod:modnuc,atom_nr:int,out:TextIOWrapper) -> None:
     for atom in res.keys():
         line = res[atom]
@@ -80,35 +105,43 @@ def simple_replace_module(res:dict,mod:modnuc,atom_nr:int,out:TextIOWrapper) -> 
         atom_nr +=1
     return atom_nr
 
+
+
 def addition_atom_generation(res:dict,mod:modnuc,atom_nr:int,out:TextIOWrapper): #placeholder for adddtion logic
 
     if (int(res[list(res.keys())[0]][23:26]) not in mod.mods) and (mod.mods != []):
         atom_nr = no_replace(res,mod,atom_nr,out)
         return atom_nr
 
-    atom_nr = simple_replace_module(res,mod,atom_nr,out)
     
-    if not mod.calculated_vector: mod.calculate_vectors_for_addition()
     
-    for add in mod.additions:
+    core_coords = np.empty((len(mod.core),3))
+    for i, add in enumerate(mod.core):
+       core_coords[i] = res["".join(add)][31:54].split()
+    
 
-        res_compare_coord = res["".join(add[1])][31:54].split()
-        res_origin_coord = res["".join(add[0])][31:54].split()
+    c,R,t = umeyama(mod.core_coord,core_coords)
+    add_coords = mod.additions_coord.dot(c*R)+t
+    
+    for i,j in enumerate(res.keys()):
+        if j not in mod.additions:
+            atom_nr = simple_replace_module(res,mod,atom_nr,out)
+        else:
+            print(i)
+            items = [mod.type,atom_nr,"".join(mod.additions[i]),mod.name,res["".join(add)][21:26],point_coord[0],point_coord[1],point_coord[2],res["".join(add[0])][56:66],add[2][0]]
+            print(items)
+        
 
-        for i in range(3):
-            res_origin_coord[i] = float(res_origin_coord[i])
-            res_compare_coord[i] = float(res_compare_coord[i])
+        #res_vec = np.array(res_compare_coord)-np.array(res_origin_coord)
 
-        res_vec = np.array(res_compare_coord)-np.array(res_origin_coord)
+        #R=align_vectors(add[4],res_vec)
+        #translat = res_origin_coord-np.array(add[3])
 
-        R=align_vectors(add[4],res_vec)
-        translat = res_origin_coord-np.array(add[3])
-
-        point_coord = add[3]+R.dot(add[5])+translat
-        items = [mod.type,atom_nr,"".join(add[2]),mod.name,res["".join(add[0])][21:26],point_coord[0],point_coord[1],point_coord[2],res["".join(add[0])][56:66],add[2][0]]
-        spot3 = "".join(add[2])
-        out.write(f"{items[0]:<6}{atom_nr:>5}  {spot3:^4}{items[3]:>3} {items[4]}     {items[5]:>7.6g} {items[6]:>7.6g} {items[7]:>7.6g}  {items[8]}           {items[9]}\n")
-        atom_nr += 1
+        #point_coord = add[3]+R.dot(add[5])+translat
+        #items = [mod.type,atom_nr,"".join(add[2]),mod.name,res["".join(add[0])][21:26],point_coord[0],point_coord[1],point_coord[2],res["".join(add[0])][56:66],add[2][0]]
+        #spot3 = "".join(add[2])
+        #out.write(f"{items[0]:<6}{atom_nr:>5}  {spot3:^4}{items[3]:>3} {items[4]}     {items[5]:>7.6g} {items[6]:>7.6g} {items[7]:>7.6g}  {items[8]}           {items[9]}\n")
+        #atom_nr += 1
 
 
     return atom_nr

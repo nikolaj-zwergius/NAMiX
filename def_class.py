@@ -29,7 +29,8 @@ class modnuc: # overall class for modified nucleotide
         self.name = name
         self.old_base = old_base
         self.type = type
-        self.additions = []
+        
+        
         self.have_additions = False
         self.replacements = []
         self.removal_steps = []
@@ -46,8 +47,11 @@ class modnuc: # overall class for modified nucleotide
             for i in replacements:
                 self.add_replacement(i[0],i[1])
         if add:
-            for i in add:
-                self.add_additions(i[0],i[1],i[2])
+            self.core = add[0]
+            self.additions = add[1]
+            self.core_coord = np.empty(shape = (len(add[0]),3))
+            self.additions_coord = np.empty(shape = (len(add[1]),3))
+            self.add_additions(add[0],add[1])
   
 
     def add_replacement(self,start,replacement): # code for adding replacment table
@@ -68,26 +72,12 @@ class modnuc: # overall class for modified nucleotide
         self.replacements = self.removal_steps
         self.inverted = True
 
-    def add_additions(self,origin,compare,add):
-        origin = self.id_atom_fixer(origin)
-        compare = self.id_atom_fixer(compare)
-        add = self.id_atom_fixer(add)
-        self.additions.append([origin,compare,add])
-        self.have_additions = True
-
-    def calculate_vectors_for_addition(self):
+    def add_additions(self,origins,add):
         pos_dict = self.cif_reader()
-       
-        for i in range(len(self.additions)):
-            
-            origin_coord = pos_dict["".join(self.additions[i][0])]
-            compare = pos_dict["".join(self.additions[i][1])]
-            addition = pos_dict["".join(self.additions[i][2])]
-
-            compare_vector = compare-origin_coord
-            addition_vector = addition-origin_coord 
-            self.additions[i].extend([origin_coord,compare_vector,addition_vector])
-        self.calculated_vector = True
+        for i,j in enumerate(origins):
+            self.core_coord[i] = pos_dict[j]
+        for i,j in enumerate(add):
+            self.additions_coord[i] = pos_dict[j]
 
     def cif_reader (self):
         with open(f"{py_path}{self.cif_path}") as f:
