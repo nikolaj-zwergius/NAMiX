@@ -16,7 +16,11 @@ wd = os.getcwd()
 
 def _base_equality_check(base:modnuc,oldbase:no_mod):
     if base.old_base != oldbase.old_base:
-        raise Wrong_Base_Error(base.old_base, oldbase.old_base,base.name)
+        if base.old_base == "T" and oldbase.old_base == "U":
+            print("Converting Uracil to Thymin, as a Thymin modification is used")
+            base.add_base([("N1","C2","N3","C4","C5","C6","O2","O4"),["C5M"]])
+        else:
+            raise Wrong_Base_Error(base.old_base, oldbase.old_base,base.name)
     return
 
 def _copy_cif(mod:modnuc,dir):
@@ -47,7 +51,8 @@ def NAMIX(pdbfile:str,restrin_file:str=None,A:modnuc=A_no_mod, C:modnuc=C_no_mod
 
     for i in range(5): # check that modnucs used match the old base they are intented to replace
         _base_equality_check(bases[i],standard_bases[i])
-    
+        if bases[i] != standard_bases[i]:
+            print(f"using {bases[i].name} for changes to {standard_bases[i].name}   |  {bases[i].description}")
     try:
         dir_path = f"{pdbfile}_{Prefix}mod"
         os.mkdir(dir_path)

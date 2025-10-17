@@ -112,31 +112,31 @@ if __name__ == "__main__":
         
         if i[0] == "-u" or i[0] == "--umod":
             split_list = i[1].split(",")
-            mod = mod_dict[split_list[0]]
+            mod = mod_dict[split_list[0].upper()]
             for base in range(1,len(split_list)):
                 mod.mods.append(int(split_list[base]))
             inputs[6] = mod
         if i[0] == "-t" or i[0] == "--tmod":
             split_list = i[1].split(",")
-            mod = mod_dict[split_list[0]]
+            mod = mod_dict[split_list[0].upper()]
             for base in range(1,len(split_list)):
                 mod.mods.append(int(split_list[base]))
             inputs[5] = mod
         if i[0] == "-g" or i[0] == "--gmod":
             split_list = i[1].split(",")
-            mod = mod_dict[split_list[0]]
+            mod = mod_dict[split_list[0].upper()]
             for base in range(1,len(split_list)):
                 mod.mods.append(int(split_list[base]))
             inputs[4] = mod
         if i[0] == "-c" or i[0] == "--cmod":
             split_list = i[1].split(",")
-            mod = mod_dict[split_list[0]]
+            mod = mod_dict[split_list[0].upper()]
             for base in range(1,len(split_list)):
                 mod.mods.append(int(split_list[base]))
             inputs[3] = mod
         if i[0] == "-a" or i[0] == "--amod":
             split_list = i[1].split(",")
-            mod = mod_dict[split_list[0]]
+            mod = mod_dict[split_list[0].upper()]
             for base in range(1,len(split_list)):
                 mod.mods.append(int(split_list[base]))
             inputs[2] = mod

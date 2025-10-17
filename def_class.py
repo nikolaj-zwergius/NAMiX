@@ -24,12 +24,13 @@ class modnuc: # overall class for modified nucleotide
         return atom
 
 
-    def __init__(self,name:str,type:str,old_base:str,replace_module,cif_path=None,replacements:list = None, add:list = None,description="no description") -> None:
+    def __init__(self,name:str,type:str,old_base:str,replace_module,cif_path=None,replacements:list = None, add_sugar:list = None, add_base:list =  None,description="no description") -> None:
       
         self.name = name
         self.old_base = old_base
         self.type = type
-        self.additions = []
+        
+        
         self.have_additions = False
         self.replacements = []
         self.removal_steps = []
@@ -45,9 +46,12 @@ class modnuc: # overall class for modified nucleotide
         if replacements: # convert the list of replacments to the co
             for i in replacements:
                 self.add_replacement(i[0],i[1])
-        if add:
-            for i in add:
-                self.add_additions(i[0],i[1],i[2])
+        
+        if add_sugar:
+            self.add_sugar(add_sugar)
+        
+        if add_base:
+            self.add_base(add_base)
   
 
     def add_replacement(self,start,replacement): # code for adding replacment table
@@ -68,26 +72,28 @@ class modnuc: # overall class for modified nucleotide
         self.replacements = self.removal_steps
         self.inverted = True
 
-    def add_additions(self,origin,compare,add):
-        origin = self.id_atom_fixer(origin)
-        compare = self.id_atom_fixer(compare)
-        add = self.id_atom_fixer(add)
-        self.additions.append([origin,compare,add])
-        self.have_additions = True
+    def add_sugar(self,add_sugar):
+        self.core_sugar = add_sugar[0]
+        self.additions_sugar = add_sugar[1]
+        self.core_coord_sugar = np.empty(shape = (len(add_sugar[0]),3))
+        self.additions_coord_sugar = np.empty(shape = (len(add_sugar[1]),3))
+        self.add_additions(add_sugar[0],add_sugar[1],self.additions_coord_sugar,self.core_coord_sugar)
 
-    def calculate_vectors_for_addition(self):
+    def add_base(self,add_base):
+        self.core_base = add_base[0]
+        self.additions_base = add_base[1]
+        self.core_coord_base = np.empty(shape = (len(add_base[0]),3))
+        self.additions_coord_base = np.empty(shape = (len(add_base[1]),3))
+        self.add_additions(add_base[0],add_base[1],self.additions_coord_base,self.core_coord_base)
+
+
+    def add_additions(self,origins,add,add_cord,core_cord):
         pos_dict = self.cif_reader()
-       
-        for i in range(len(self.additions)):
-            
-            origin_coord = pos_dict["".join(self.additions[i][0])]
-            compare = pos_dict["".join(self.additions[i][1])]
-            addition = pos_dict["".join(self.additions[i][2])]
-
-            compare_vector = compare-origin_coord
-            addition_vector = addition-origin_coord 
-            self.additions[i].extend([origin_coord,compare_vector,addition_vector])
-        self.calculated_vector = True
+        for i,j in enumerate(add):
+            add_cord[i] = pos_dict[j]
+        for i,j in enumerate(origins):
+            #print(self.name,i,j,core_cord)
+            core_cord[i] = pos_dict[j]
 
     def cif_reader (self):
         with open(f"{py_path}{self.cif_path}") as f:
