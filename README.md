@@ -62,11 +62,10 @@ if no res ID is given all bases of the type will be replaced
  -t [modifcaiton,resids]: set modifcation for thymine
 
 ## Contributing
-1. Fork the repository.
-2. Create a new branch: `git checkout -b feature-name`.
-3. Make your changes.
-4. Push your branch: `git push origin feature-name`.
-5. Create a pull request.
+1. Create a new branch: `git checkout -b feature-name`.
+2. Make your changes.
+3. Push your branch: `git push origin feature-name`.
+4. Create a pull request.
 
 ## License
 This project is licensed under the [GPL-3.0 license](LICENSE).
