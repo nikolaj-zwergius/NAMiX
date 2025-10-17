@@ -1,7 +1,7 @@
 
 
 from def_class import modnuc, no_mod
-from rep_func import no_replace,simple_replace_module,addition_atom_generation
+from modifcation_functions import no_replace,simple_replace_module,addition_atom_generation
 
 
     
