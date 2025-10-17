@@ -25,9 +25,11 @@ After this add the NAMIX folder to your PATH
 
 ### Windows
 
+Edit the system enveriment variables 
+
 ### Mac
 
-This software has not been tested on Mac OS but show be compatiable, but no guarantee is made 
+This software has not been tested on Mac OS but should be compatiable, but no guarantee is made 
 
 ### If using ROAD style blueprint
 If you want to use ROAD style blueprints for the generation of base paring restraints. you need to have perl install in addtion to python, as the code for convereting the blueprint to dot-barcket format, is taken from the [ROAD](https://github.com/esa-lab/ROAD) repository.
@@ -60,11 +62,10 @@ if no res ID is given all bases of the type will be replaced
  -t [modifcaiton,resids]: set modifcation for thymine
 
 ## Contributing
-1. Fork the repository.
-2. Create a new branch: `git checkout -b feature-name`.
-3. Make your changes.
-4. Push your branch: `git push origin feature-name`.
-5. Create a pull request.
+1. Create a new branch: `git checkout -b feature-name`.
+2. Make your changes.
+3. Push your branch: `git push origin feature-name`.
+4. Create a pull request.
 
 ## License
 This project is licensed under the [GPL-3.0 license](LICENSE).
