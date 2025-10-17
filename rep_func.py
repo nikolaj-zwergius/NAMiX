@@ -109,28 +109,38 @@ def simple_replace_module(res:dict,mod:modnuc,atom_nr:int,out:TextIOWrapper) -> 
 
 def addition_atom_generation(res:dict,mod:modnuc,atom_nr:int,out:TextIOWrapper): #placeholder for adddtion logic
 
+   
     if (int(res[list(res.keys())[0]][23:26]) not in mod.mods) and (mod.mods != []):
         atom_nr = no_replace(res,mod,atom_nr,out)
         return atom_nr
-
+    
     
     
     core_coords = np.empty((len(mod.core),3))
     for i, add in enumerate(mod.core):
        core_coords[i] = res["".join(add)][31:54].split()
     
+    for i in mod.additions:
+        res[i] = []
 
     c,R,t = umeyama(mod.core_coord,core_coords)
     add_coords = mod.additions_coord.dot(c*R)+t
-    
+    mod_index = 0
+
     for i,j in enumerate(res.keys()):
+        #print(j)
         if j not in mod.additions:
-            atom_nr = simple_replace_module(res,mod,atom_nr,out)
+            #print(j)
+            atom = {j:res[j]}
+            atom_nr = simple_replace_module(atom,mod,atom_nr,out)
         else:
-            print(i)
-            items = [mod.type,atom_nr,"".join(mod.additions[i]),mod.name,res["".join(add)][21:26],point_coord[0],point_coord[1],point_coord[2],res["".join(add[0])][56:66],add[2][0]]
-            print(items)
-        
+            #print(mod_index,mod.additions)
+            items = [mod.type,atom_nr,j,mod.name,res["".join(add)][21:26],add_coords[mod_index][0],add_coords[mod_index][1],add_coords[mod_index][2],"1.00  0.00",mod.additions[mod_index][0] ]
+            spot3 = "".join(mod.additions[mod_index])
+            out.write(f"{items[0]:<6}{atom_nr:>5} {spot3:^5}{items[3]:>3} {items[4]}     {items[5]:>7.6g} {items[6]:>7.6g} {items[7]:>7.6g}  {items[8]}           {items[9]}\n")
+            mod_index += 1
+            atom_nr += 1
+    return atom_nr
 
         #res_vec = np.array(res_compare_coord)-np.array(res_origin_coord)
 
