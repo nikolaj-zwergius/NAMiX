@@ -24,7 +24,7 @@ class modnuc: # overall class for modified nucleotide
         return atom
 
 
-    def __init__(self,name:str,type:str,old_base:str,replace_module,cif_path=None,replacements:list = None, add:list = None,description="no description") -> None:
+    def __init__(self,name:str,type:str,old_base:str,replace_module,cif_path=None,replacements:list = None, add_sugar:list = None, add_base:list =  None,description="no description") -> None:
       
         self.name = name
         self.old_base = old_base
@@ -46,12 +46,12 @@ class modnuc: # overall class for modified nucleotide
         if replacements: # convert the list of replacments to the co
             for i in replacements:
                 self.add_replacement(i[0],i[1])
-        if add:
-            self.core = add[0]
-            self.additions = add[1]
-            self.core_coord = np.empty(shape = (len(add[0]),3))
-            self.additions_coord = np.empty(shape = (len(add[1]),3))
-            self.add_additions(add[0],add[1])
+        
+        if add_sugar:
+            self.add_sugar(add_sugar)
+        
+        if add_base:
+            self.add_base(add_base)
   
 
     def add_replacement(self,start,replacement): # code for adding replacment table
@@ -72,12 +72,28 @@ class modnuc: # overall class for modified nucleotide
         self.replacements = self.removal_steps
         self.inverted = True
 
-    def add_additions(self,origins,add):
+    def add_sugar(self,add_sugar):
+        self.core_sugar = add_sugar[0]
+        self.additions_sugar = add_sugar[1]
+        self.core_coord_sugar = np.empty(shape = (len(add_sugar[0]),3))
+        self.additions_coord_sugar = np.empty(shape = (len(add_sugar[1]),3))
+        self.add_additions(add_sugar[0],add_sugar[1],self.additions_coord_sugar,self.core_coord_sugar)
+
+    def add_base(self,add_base):
+        self.core_base = add_base[0]
+        self.additions_base = add_base[1]
+        self.core_coord_base = np.empty(shape = (len(add_base[0]),3))
+        self.additions_coord_base = np.empty(shape = (len(add_base[1]),3))
+        self.add_additions(add_base[0],add_base[1],self.additions_coord_base,self.core_coord_base)
+
+
+    def add_additions(self,origins,add,add_cord,core_cord):
         pos_dict = self.cif_reader()
-        for i,j in enumerate(origins):
-            self.core_coord[i] = pos_dict[j]
         for i,j in enumerate(add):
-            self.additions_coord[i] = pos_dict[j]
+            add_cord[i] = pos_dict[j]
+        for i,j in enumerate(origins):
+            #print(self.name,i,j,core_cord)
+            core_cord[i] = pos_dict[j]
 
     def cif_reader (self):
         with open(f"{py_path}{self.cif_path}") as f:
