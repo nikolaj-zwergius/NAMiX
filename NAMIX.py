@@ -16,7 +16,11 @@ wd = os.getcwd()
 
 def _base_equality_check(base:modnuc,oldbase:no_mod):
     if base.old_base != oldbase.old_base:
-        raise Wrong_Base_Error(base.old_base, oldbase.old_base,base.name)
+        if base.old_base == "T" and oldbase.old_base == "U":
+            print("converting U to T")
+            base.add_base([("N1","C2","N3","C4","C5","C6","O2","O4"),["C5M"]])
+        else:
+            raise Wrong_Base_Error(base.old_base, oldbase.old_base,base.name)
     return
 
 def _copy_cif(mod:modnuc,dir):
