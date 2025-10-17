@@ -25,6 +25,8 @@ After this add the NAMIX folder to your PATH
 
 ### Windows
 
+Edit the system enveriment variables 
+
 ### Mac
 
 This software has not been tested on Mac OS but show be compatiable, but no guarantee is made 
