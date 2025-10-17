@@ -29,7 +29,7 @@ Edit the system enveriment variables
 
 ### Mac
 
-This software has not been tested on Mac OS but show be compatiable, but no guarantee is made 
+This software has not been tested on Mac OS but should be compatiable, but no guarantee is made 
 
 ### If using ROAD style blueprint
 If you want to use ROAD style blueprints for the generation of base paring restraints. you need to have perl install in addtion to python, as the code for convereting the blueprint to dot-barcket format, is taken from the [ROAD](https://github.com/esa-lab/ROAD) repository.
