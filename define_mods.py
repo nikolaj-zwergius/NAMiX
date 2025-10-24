@@ -18,10 +18,10 @@ AF2 = modnuc("AF2","HETATM","A",simple_replace_module,None, replacements= [("O2'
 GF2 = modnuc("GF2","HETATM","G",simple_replace_module,None, replacements= [("O2'","F2'"),("HO2'",None)],description="2'F Adenine | Has no cif file yet") #  2'F G
 
 UMX = modnuc("UMX","HETATM","U",addition_atom_generation,None,replacements= [("O2'",None),("HO2'",None)],description="Locked Uracil | Not implemented yet")# LNA  U NOT DONE
-LCC = modnuc("LCC","HETATM","C",addition_atom_generation,"/mods/LCC.cif",replacements= [("HO2'",None)], add_sugar=[("O4'","C3'","C1'","C2'","C4'","O3'","C5'"),["O4'","C3'","C2'","C6'","O2'","C3'","O3'"]],add_base=[("N1","C2","N3","C4","C5","C6","O2","N4"),["C5M"]],description="Locked Cytosine | cant be reverted by NAMIX")# LNA  C NOT DONE
+LCC = modnuc("LCC","HETATM","C",addition_atom_generation,"/mods/LCC.cif",replacements= [("HO2'",None)], add_sugar=[("O4'","C3'","C1'","C2'","C4'","O3'","C5'"),["O4'","C3'","C2'","C6'","O2'","O3'","C1'"]],add_base=[("N1","C2","N3","C4","C5","C6","O2","N4"),["C5M"]],description="Locked Cytosine | cant be reverted by NAMIX")# LNA  C NOT DONE
 LCA = modnuc("LCA","HETATM","A",addition_atom_generation,"/mods/LCA.cif",replacements= [("O2'",None),("HO2'",None)], add_sugar=[("P","C5'","C4'","O4'","C3'","C1'"),["C2'","C6","O2'"]],description="Locked Adenine | cant be reverted by NAMIX")# LNA  A NOT DONE
 LCG = modnuc("LCG","HETATM","G",addition_atom_generation,None,replacements= [("O2'",None),("HO2'",None)],description="Locked Guanine | Not implemented yet")# LNA  G NOT DONE
-TLN = modnuc("TLN","HETATM","T",addition_atom_generation,"/mods/TLN.cif",replacements= [("HO2'",None)], add_sugar=[("O4'","C3'","C1'","C2'","C4'","O3'","C5'"),["O4'","C3'","C2'","C6'","O2'","C3'","O3'"]],description="Locked Thymine | cant be reverted by NAMIX")# LNA  C NOT DONE
+TLN = modnuc("TLN","HETATM","T",addition_atom_generation,"/mods/TLN.cif",replacements= [("HO2'",None)], add_sugar=[("O4'","C3'","C1'","C2'","C4'","O3'","C5'"),["O4'","C3'","C2'","C6'","O2'","O3'","C1'"]],description="Locked Thymine | cant be reverted by NAMIX")# LNA  C NOT DONE
 
 
 mod_dict ={UFT.name:UFT,CFZ.name:CFZ,AF2.name:AF2,GF2.name:GF2,

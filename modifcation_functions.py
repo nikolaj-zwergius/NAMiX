@@ -139,23 +139,24 @@ def addition_atom_generation(res:dict,mod:modnuc,atom_nr:int,out:TextIOWrapper):
     mod_index_sugar = 0
     mod_index_base = 0
     for i,j in enumerate(res.keys()):
+        
         #print(j)
         if j not in mod.additions_sugar and j not in mod.additions_base:
             #print(j)
             atom = {j:res[j]}
             atom_nr = simple_replace_module(atom,mod,atom_nr,out)
         elif j in mod.additions_sugar:
-            items = [mod.type,atom_nr,j,mod.name,res["".join(add)][21:26],add_coords_sugar[mod_index_sugar][0],add_coords_sugar[mod_index_sugar][1],add_coords_sugar[mod_index_sugar][2],"1.00  0.00",mod.additions_sugar[mod_index_sugar][0] ]
-            spot3 = "".join(mod.additions_sugar[mod_index_sugar])
-            out.write(f"{items[0]:<6}{atom_nr:>5} {spot3:^5}{items[3]:>3} {items[4]}     {items[5]:>7.6g} {items[6]:>7.6g} {items[7]:>7.6g}  {items[8]}           {items[9]}\n")
+            items = [mod.type,atom_nr,j,mod.name,res["".join(add)][21:26],add_coords_sugar[mod.addtion_index[j]][0],add_coords_sugar[mod.addtion_index[j]][1],add_coords_sugar[mod.addtion_index[j]][2],"1.00  0.00",mod.additions_sugar[mod.addtion_index[j]][0] ]
+            out.write(f"{items[0]:<6}{atom_nr:>5} {j:^5}{items[3]:>3} {items[4]}     {items[5]:>7.6g} {items[6]:>7.6g} {items[7]:>7.6g}  {items[8]}           {items[9]}\n")
             mod_index_sugar += 1
             atom_nr += 1
         else:
-            items = [mod.type,atom_nr,j,mod.name,res["".join(add)][21:26],add_coords_base[mod_index_base][0],add_coords_base[mod_index_base][1],add_coords_base[mod_index_base][2],"1.00  0.00",mod.additions_base[mod_index_base][0] ]
-            spot3 = "".join(mod.additions_base[mod_index_base])
-            out.write(f"{items[0]:<6}{atom_nr:>5} {spot3:^5}{items[3]:>3} {items[4]}     {items[5]:>7.6g} {items[6]:>7.6g} {items[7]:>7.6g}  {items[8]}           {items[9]}\n")
+            items = [mod.type,atom_nr,j,mod.name,res["".join(add)][21:26],add_coords_base[mod.addtion_index[j]][0],add_coords_base[mod.addtion_index[j]][1],add_coords_base[mod.addtion_index[j]][2],"1.00  0.00",mod.additions_base[mod.addtion_index[j]][0] ]
+
+            out.write(f"{items[0]:<6}{atom_nr:>5} {j:^5}{items[3]:>3} {items[4]}     {items[5]:>7.6g} {items[6]:>7.6g} {items[7]:>7.6g}  {items[8]}           {items[9]}\n")
             mod_index_base += 1
             atom_nr += 1
+
 
     return atom_nr
 
